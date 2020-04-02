@@ -4,19 +4,23 @@ import com.delbel.bullscows.game.domain.core.Answer
 import com.delbel.bullscows.game.domain.core.Guess
 import com.delbel.bullscows.game.domain.core.Secret
 
-data class Game(private val secret: Secret, private val maxAttempts: Int) {
-
-    private lateinit var current: Shift
+data class Game(
+    private val id: GameId,
+    private val secret: Secret,
+    private val maxAttempts: Int,
+    private var current: Shift? = null
+) {
 
     fun guess(guess: Guess): Shift {
         val answer = secret.guess(guess)
-        updateCurrentShift(newAnswer = answer)
+        val next = nextShift(guess = guess, answer = answer)
+        current = next
 
-        return current
+        return next
     }
 
-    private fun updateCurrentShift(newAnswer: Answer) {
-        current = if (::current.isInitialized) current.next(answer = newAnswer)
-        else Shift(answer = newAnswer, maxAttempts = maxAttempts)
-    }
+    private fun nextShift(guess: Guess, answer: Answer) = current?.next(guess, answer)
+        ?: Shift(answer = answer, guess = guess, maxAttempts = maxAttempts)
 }
+
+inline class GameId(val id: String)

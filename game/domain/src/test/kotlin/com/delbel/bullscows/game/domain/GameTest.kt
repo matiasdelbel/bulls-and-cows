@@ -15,10 +15,11 @@ class GameTest {
         val answer = mock<Answer>()
         val guess = mock<Guess>()
         val secret = mock<Secret> { on { guess(guess) } doReturn answer }
-        val game = Game(secret, maxAttempts = 2)
+        val game = Game(id = mock(), secret = secret, maxAttempts = 2)
 
         val shift = game.guess(guess)
 
-        assertThat(shift).isEqualTo(Shift(attempt = 1, answer = answer, maxAttempts = 2))
+        val expectedShift = Shift(attempt = 1, guess = guess, answer = answer, maxAttempts = 2)
+        assertThat(shift).isEqualTo(expectedShift)
     }
 }

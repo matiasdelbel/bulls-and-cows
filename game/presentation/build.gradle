@@ -5,4 +5,10 @@ android.resourcePrefix 'game'
 
 dependencies {
     implementation project(':game:domain')
+
+    implementation presentation.viewModel
+    implementation presentation.savedState
+
+    testImplementation test.coroutines
+    testImplementation test.core
 }
