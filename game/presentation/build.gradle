@@ -1,0 +1,8 @@
+apply plugin: 'com.android.library'
+apply from: "$rootDir/.dna/module-kotlin-android.gradle"
+
+android.resourcePrefix 'game'
+
+dependencies {
+    implementation project(':game:domain')
+}

@@ -1,0 +1,47 @@
+version: 2
+
+jobs:
+  build:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-28
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+
+      - run:
+          name: Run Game Domain Module Unit Tests
+          command: ./gradlew :game:domain:testDebugUnitTest
+      - store_artifacts:
+          path: game/domain/build/reports
+      - store_test_results:
+          path: game/domain/build/test-results
+
+      - run:
+          name: Run Game Gateway Module Unit Tests
+          command: ./gradlew :game:gateway:testDebugUnitTest
+      - store_artifacts:
+          path: game/gateway/build/reports
+      - store_test_results:
+          path: game/gateway/build/test-results
+
+      - run:
+          name: Run Game Presentation Module Unit Tests
+          command: ./gradlew :game:presentation:testDebugUnitTest
+      - store_artifacts:
+          path: game/presentation/build/reports
+      - store_test_results:
+          path: game/presentation/build/test-results

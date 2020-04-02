@@ -1,0 +1,9 @@
+include ':app'
+
+include ':game:domain'
+include ':game:gateway'
+include ':game:presentation'
+
+project(':game:domain').projectDir = new File(rootDir, 'game/domain')
+project(':game:gateway').projectDir = new File(rootDir, 'game/gateway')
+project(':game:presentation').projectDir = new File(rootDir, 'game/presentation')
