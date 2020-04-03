@@ -6,12 +6,18 @@ import com.delbel.bullscows.game.domain.Shift
 import com.delbel.bullscows.game.domain.core.Guess
 import com.delbel.bullscows.game.domain.core.MalformedGuessException
 import com.delbel.bullscows.game.domain.repository.GameRepository
+import com.delbel.bullscows.game.presentation.di.AssistedViewModelFactory
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import kotlinx.coroutines.launch
 
-internal class GameViewModel(
-    handle: SavedStateHandle,
+internal class GameViewModel @AssistedInject constructor(
+    @Assisted handle: SavedStateHandle,
     private val repository: GameRepository
 ) : ViewModel() {
+
+    @AssistedInject.Factory
+    interface Factory : AssistedViewModelFactory<GameViewModel>
 
     private val id = GameId(id = handle.get<String>("game_id")!!)
     private val _state = MutableLiveData<GameState>()
