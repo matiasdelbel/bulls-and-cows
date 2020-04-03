@@ -1,11 +1,6 @@
 package com.delbel.bullscows.game.domain.core
 
-data class Guess(
-    private val first: Int,
-    private val second: Int,
-    private val third: Int,
-    private val fourth: Int
-) {
+data class Guess(val first: Int, val second: Int, val third: Int, val fourth: Int) {
 
     private val guess: List<Int> = listOf(first, second, third, fourth).distinct()
 

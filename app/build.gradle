@@ -1,7 +1,11 @@
 apply plugin: 'com.android.application'
 apply from: "$rootDir/.dna/module-kotlin-android.gradle"
 
-android.defaultConfig.applicationId = "com.delbel.bullscows.app"
+android {
+    defaultConfig.applicationId = "com.delbel.bullscows.app"
+
+    viewBinding.enabled = true
+}
 
 dependencies {
     implementation project(':game:domain')
@@ -9,10 +13,11 @@ dependencies {
     implementation project(':game:presentation')
 
     implementation core.dagger
+    implementation core.daggerSupport
+    implementation core.daggerViewModel
     kapt core.daggerProcessor
-
-    implementation app.daggerSupport
-    kapt app.daggerCompiler
+    kapt core.daggerCompiler
 
     implementation presentation.appcompat
+    implementation presentation.material
 }

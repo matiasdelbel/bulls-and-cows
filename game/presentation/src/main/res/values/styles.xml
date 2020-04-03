@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="GameGuess" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="GameItemGuessed">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?android:colorPrimaryDark</item>
+    </style>
+
+    <style name="GameItemAnswer" parent="@style/TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorAccent</item>
+    </style>
+</resources>

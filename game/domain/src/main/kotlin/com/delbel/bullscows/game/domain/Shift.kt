@@ -3,12 +3,7 @@ package com.delbel.bullscows.game.domain
 import com.delbel.bullscows.game.domain.core.Answer
 import com.delbel.bullscows.game.domain.core.Guess
 
-data class Shift(
-    private val attempt: Int = 1,
-    private val guess: Guess,
-    private val answer: Answer,
-    private val maxAttempts: Int
-) {
+data class Shift(val attempt: Int = 1, val guess: Guess, val answer: Answer, val maxAttempts: Int) {
 
     fun executeIf(won: () -> Unit, over: () -> Unit, inProgress: () -> Unit) = answer.executeIf(
         guess = won,

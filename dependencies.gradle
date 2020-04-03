@@ -11,12 +11,10 @@ ext {
             liveData       : "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0",
 
             dagger         : "com.google.dagger:dagger:2.25.2",
+            daggerSupport  : "com.google.dagger:dagger-android-support:2.25.2",
+            daggerViewModel: "com.delbel.dagger:dagger-viewmodel:0.0.4",
             daggerProcessor: "com.google.dagger:dagger-android-processor:2.25.2",
-    ]
-
-    app = [
-            daggerSupport : "com.google.dagger:dagger-android-support:2.25.2",
-            daggerCompiler: "com.google.dagger:dagger-compiler:2.25.2"
+            daggerCompiler : "com.google.dagger:dagger-compiler:2.25.2"
     ]
 
     test = [
@@ -35,11 +33,13 @@ ext {
     ]
 
     presentation = [
+            fragment                 : "androidx.navigation:navigation-fragment-ktx:2.2.1",
             appcompat                : "androidx.appcompat:appcompat:1.1.0",
             viewModel                : "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0",
             savedState               : "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0",
+            constraintLayout         : "androidx.constraintlayout:constraintlayout:1.1.3",
+            material                 : "com.google.android.material:material:1.1.0",
 
-            daggerViewModel          : "com.delbel.dagger:dagger-viewmodel:0.0.4",
             assistedInjection        : "com.squareup.inject:assisted-inject-annotations-dagger2:0.5.2",
             assistedInjectionCompiler: "com.squareup.inject:assisted-inject-processor-dagger2:0.5.2"
     ]
