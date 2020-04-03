@@ -12,7 +12,7 @@ class GuessTest {
         assertThat(guess).isEqualTo(Guess(first = 1, second = 2, third = 3, fourth = 4))
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = MalformedGuessException::class)
     fun `create with repeated four-digit guess should throw and exception`() {
         Guess(first = 1, second = 2, third = 2, fourth = 4)
     }

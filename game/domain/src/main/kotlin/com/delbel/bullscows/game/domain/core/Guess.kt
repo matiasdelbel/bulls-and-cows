@@ -10,7 +10,7 @@ data class Guess(
     private val guess: List<Int> = listOf(first, second, third, fourth).distinct()
 
     init {
-        require(guess.count() == 4) { "The four-digit guess number must be all different." }
+        if (guess.count() != 4) throw MalformedGuessException()
     }
 
     internal fun guess(first: Int, second: Int, third: Int, fourth: Int): Answer {
@@ -22,3 +22,5 @@ data class Guess(
         return Answer(bulls, cows)
     }
 }
+
+class MalformedGuessException() : RuntimeException()

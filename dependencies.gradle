@@ -6,13 +6,17 @@ ext {
     ]
 
     core = [
-            stdlibJdk7: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61"
+            stdlibJdk7: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61",
+
+            liveData  : "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
     ]
 
     test = [
-            jUnit  : "junit:junit:4.12",
-            mockito: "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0",
-            truth  : "com.google.truth:truth:1.0"
+            jUnit     : "junit:junit:4.12",
+            mockito   : "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0",
+            truth     : "com.google.truth:truth:1.0",
+            coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.2",
+            core      : "androidx.arch.core:core-testing:2.1.0"
     ]
 
     androidTest = [
@@ -23,6 +27,8 @@ ext {
     ]
 
     presentation = [
-            appcompat: "androidx.appcompat:appcompat:1.1.0"
+            appcompat : "androidx.appcompat:appcompat:1.1.0",
+            viewModel : "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0",
+            savedState: "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0"
     ]
 }

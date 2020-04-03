@@ -1,6 +1,7 @@
 package com.delbel.bullscows.game.domain.core
 
 import com.google.common.truth.Truth.assertThat
+import junit.framework.Assert.fail
 import org.junit.Test
 
 class AnswerTest {
@@ -35,5 +36,19 @@ class AnswerTest {
     @Test(expected = IllegalArgumentException::class)
     fun `create with sum between cows and bulls higher than four should throw an exception`() {
         Answer(bulls = 3, cows = 3)
+    }
+
+    @Test
+    fun `executeIf with guess should execute guess`() {
+        val answer = Answer(bulls = 4, cows = 0)
+
+        answer.executeIf(guess = { assert(true) }, wrongGuess = { fail() })
+    }
+
+    @Test
+    fun `executeIf with wrong guess should execute wrong guess`() {
+        val answer = Answer(bulls = 1, cows = 2)
+
+        answer.executeIf(guess = { fail() }, wrongGuess = { assert(true) })
     }
 }
