@@ -6,6 +6,13 @@ android.resourcePrefix 'game'
 dependencies {
     implementation project(':game:domain')
 
+    implementation core.dagger
+    kapt core.daggerProcessor
+
+    implementation presentation.daggerViewModel
+    implementation presentation.assistedInjection
+    kapt presentation.assistedInjectionCompiler
+
     implementation presentation.viewModel
     implementation presentation.savedState
 

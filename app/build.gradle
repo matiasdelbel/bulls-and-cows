@@ -4,9 +4,15 @@ apply from: "$rootDir/.dna/module-kotlin-android.gradle"
 android.defaultConfig.applicationId = "com.delbel.bullscows.app"
 
 dependencies {
-    implementation presentation.appcompat
-
     implementation project(':game:domain')
     implementation project(':game:gateway')
     implementation project(':game:presentation')
+
+    implementation core.dagger
+    kapt core.daggerProcessor
+
+    implementation app.daggerSupport
+    kapt app.daggerCompiler
+
+    implementation presentation.appcompat
 }
