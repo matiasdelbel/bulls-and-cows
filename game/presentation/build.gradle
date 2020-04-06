@@ -6,6 +6,8 @@ android.viewBinding.enabled = true
 dependencies {
     implementation project(':game:domain')
 
+    implementation core.liveData
+
     implementation core.dagger
     implementation core.daggerSupport
     implementation core.daggerViewModel

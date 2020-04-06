@@ -5,10 +5,10 @@ import com.delbel.bullscows.game.domain.core.Guess
 import com.delbel.bullscows.game.domain.core.Secret
 
 data class Game(
-    private val id: GameId,
-    private val secret: Secret,
-    private val maxAttempts: Int,
-    private var current: Shift? = null
+    val id: GameId,
+    val secret: Secret,
+    val maxAttempts: Int,
+    var current: Shift? = null
 ) {
 
     fun guess(guess: Guess): Shift {
@@ -23,4 +23,4 @@ data class Game(
         ?: Shift(answer = answer, guess = guess, maxAttempts = maxAttempts)
 }
 
-inline class GameId(val id: String)
+inline class GameId(val id: Long)

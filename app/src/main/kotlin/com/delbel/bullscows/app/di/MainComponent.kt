@@ -2,7 +2,7 @@ package com.delbel.bullscows.app.di
 
 import android.app.Application
 import com.delbel.bullscows.app.MainApplication
-import com.delbel.bullscows.game.presentation.di.FakeModule
+import com.delbel.bullscows.game.gateway.di.GatewayModule
 import com.delbel.bullscows.game.presentation.di.PresentationModule
 import dagger.BindsInstance
 import dagger.Component
@@ -13,7 +13,7 @@ import javax.inject.Singleton
     modules = [
         AndroidSupportInjectionModule::class,
         PresentationModule::class,
-        FakeModule::class]
+        GatewayModule::class]
 )
 @Singleton
 internal interface MainComponent {
