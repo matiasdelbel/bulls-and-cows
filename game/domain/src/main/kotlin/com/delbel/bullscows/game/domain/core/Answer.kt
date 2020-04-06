@@ -1,9 +1,6 @@
 package com.delbel.bullscows.game.domain.core
 
-data class Answer(
-    private val bulls: Int,
-    private val cows: Int
-) {
+data class Answer(val bulls: Int, val cows: Int) {
 
     init {
         require(bulls in 0..4) { "Bulls ($bulls) should be a number between 0 and 4" }

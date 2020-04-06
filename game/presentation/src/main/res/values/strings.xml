@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game_guess_hint_first">1</string>
+    <string name="game_guess_hint_second">3</string>
+    <string name="game_guess_hint_third">4</string>
+    <string name="game_guess_hint_fourth">0</string>
+
+    <string name="game_guess_action">Guess</string>
+</resources>
