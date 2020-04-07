@@ -45,3 +45,27 @@ jobs:
           path: game/presentation/build/reports
       - store_test_results:
           path: game/presentation/build/test-results
+
+      - run:
+          name: Run Session Domain Module Unit Tests
+          command: ./gradlew :session:domain:testDebugUnitTest
+      - store_artifacts:
+          path: session/domain/build/reports
+      - store_test_results:
+          path: session/domain/build/test-results
+
+      - run:
+          name: Run Session Gateway Module Unit Tests
+          command: ./gradlew :session:gateway:testDebugUnitTest
+      - store_artifacts:
+          path: session/gateway/build/reports
+      - store_test_results:
+          path: session/gateway/build/test-results
+
+      - run:
+          name: Run Session Presentation Module Unit Tests
+          command: ./gradlew :session:presentation:testDebugUnitTest
+      - store_artifacts:
+          path: session/presentation/build/reports
+      - store_test_results:
+          path: session/presentation/build/test-results
