@@ -12,6 +12,10 @@ dependencies {
     implementation project(':game:gateway')
     implementation project(':game:presentation')
 
+    implementation project(':session:domain')
+    implementation project(':session:gateway')
+    implementation project(':session:presentation')
+
     implementation core.dagger
     implementation core.daggerSupport
     implementation core.daggerViewModel
