@@ -55,8 +55,8 @@ class GameScreen : Fragment() {
 
         // TODO remove this! Hardcoded until we pass the actually id from other screen
         runBlocking {
-            val id = repository.saveGame(Secret(1, 2, 3, 4), maxAttempts = 7)
-            arguments = bundleOf("game_id" to id.id)
+            val game = repository.create()
+            arguments = bundleOf("game_id" to game.id.id)
             // TODO move to the onActivityCreated
             viewModel.shifts.observe(viewLifecycleOwner, Observer(::handleShiftsUpdates))
         }

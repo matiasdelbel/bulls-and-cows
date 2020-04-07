@@ -5,10 +5,10 @@ import com.delbel.bullscows.game.domain.core.Guess
 import com.delbel.bullscows.game.domain.core.Secret
 
 data class Game(
-    val id: GameId,
+    val id: GameId = GameId(),
     val secret: Secret,
     val maxAttempts: Int,
-    var current: Shift? = null
+    private var current: Shift? = null
 ) {
 
     fun guess(guess: Guess): Shift {
@@ -19,8 +19,24 @@ data class Game(
         return next
     }
 
+    fun executeIf(
+        isAboutToStart: () -> Unit,
+        isInProgress: () -> Unit,
+        hasWon: () -> Unit,
+        hasLost: () -> Unit
+    ) = when (current == null) {
+        true -> isAboutToStart()
+        false -> current?.executeIf(won = hasWon, over = hasLost, inProgress = isInProgress)
+    }
+
     private fun nextShift(guess: Guess, answer: Answer) = current?.next(guess, answer)
         ?: Shift(answer = answer, guess = guess, maxAttempts = maxAttempts)
+
+    interface Factory {
+
+        fun create(): Game
+    }
+
 }
 
-inline class GameId(val id: Long)
+inline class GameId(val id: Long = Long.MAX_VALUE)

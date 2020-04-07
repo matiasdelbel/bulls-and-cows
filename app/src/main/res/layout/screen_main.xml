@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/game_screen"
-        android:name="com.delbel.bullscows.game.presentation.core.GameScreen"
+        android:name="com.delbel.bullscows.session.presentation.menu.MenuScreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

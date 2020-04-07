@@ -3,12 +3,11 @@ package com.delbel.bullscows.game.domain.repository
 import com.delbel.bullscows.game.domain.Game
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.game.domain.Shift
-import com.delbel.bullscows.game.domain.core.Secret
 import kotlinx.coroutines.flow.Flow
 
 interface GameRepository {
 
-    suspend fun saveGame(secret: Secret, maxAttempts: Int): GameId
+    suspend fun create(): Game
 
     suspend fun obtainGameBy(id: GameId): Game
 

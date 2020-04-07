@@ -1,11 +1,6 @@
 package com.delbel.bullscows.game.domain.core
 
-data class Secret(
-    val first: Int,
-    val second: Int,
-    val third: Int,
-    val fourth: Int
-) {
+data class Secret(val first: Int, val second: Int, val third: Int, val fourth: Int) {
 
     init {
         val secret = listOf(first, second, third, fourth).distinct()

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_resume_game">Resume Game</string>
+    <string name="session_create_game">Create Game</string>
+    <string name="session_best_scores">Best scores</string>
+</resources>

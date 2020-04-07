@@ -4,6 +4,7 @@ apply from: "$rootDir/.dna/module-kotlin-android.gradle"
 android.viewBinding.enabled = true
 
 dependencies {
+    implementation project(':game:domain')
     implementation project(':session:domain')
 
     implementation core.liveData
