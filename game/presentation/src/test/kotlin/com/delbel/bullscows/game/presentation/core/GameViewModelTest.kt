@@ -24,7 +24,7 @@ class GameViewModelTest {
 
     private companion object {
         private const val GAME_ID_KEY = "game_id"
-        private const val GAME_ID_MOCK = "id"
+        private const val GAME_ID_MOCK = 123L
     }
 
     @get:Rule
@@ -41,7 +41,10 @@ class GameViewModelTest {
 
     @Test
     fun `guess with malformed guess should notify error`() = coroutineRule.runBlockingTest {
-        val viewModel = GameViewModel(handle = savedStateHandle(), repository = mock())
+        val repository = mock<GameRepository> {
+            on { shiftsFor(id = GameId(GAME_ID_MOCK)) } doReturn mock()
+        }
+        val viewModel = GameViewModel(handle = savedStateHandle(gameId = GAME_ID_MOCK), repository = repository)
 
         viewModel.guess(first = 1, second = 1, third = 3, fourth = 4)
 
@@ -51,7 +54,8 @@ class GameViewModelTest {
     @Test
     fun `guess with game not on repository should notify error`() = coroutineRule.runBlockingTest {
         val repository = mock<GameRepository> {
-            onBlocking { game(id = GameId(GAME_ID_MOCK)) } doThrow RuntimeException()
+            on { shiftsFor(id = GameId(GAME_ID_MOCK)) } doReturn mock()
+            onBlocking { obtainGameBy(id = GameId(GAME_ID_MOCK)) } doThrow RuntimeException()
         }
         val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
 
@@ -65,7 +69,8 @@ class GameViewModelTest {
         val guess = Guess(first = 1, second = 2, third = 3, fourth = 4)
         val game = mock<Game> { on { guess(guess) } doThrow RuntimeException() }
         val repository = mock<GameRepository> {
-            onBlocking { game(id = GameId(GAME_ID_MOCK)) } doReturn game
+            on { shiftsFor(id = GameId(GAME_ID_MOCK)) } doReturn mock()
+            onBlocking { obtainGameBy(id = GameId(GAME_ID_MOCK)) } doReturn game
         }
         val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
 
@@ -81,8 +86,9 @@ class GameViewModelTest {
         val guess = Guess(first = 1, second = 2, third = 3, fourth = 4)
         val game = mock<Game> { on { guess(guess) } doReturn shift }
         val repository = mock<GameRepository> {
-            onBlocking { game(id = gameId) } doReturn game
-            onBlocking { update(id = gameId, shift = shift) } doThrow RuntimeException()
+            on { shiftsFor(id = GameId(GAME_ID_MOCK)) } doReturn mock()
+            onBlocking { obtainGameBy(id = gameId) } doReturn game
+            onBlocking { addShift(gameId = gameId, shift = shift) } doThrow RuntimeException()
         }
         val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
 
@@ -94,12 +100,18 @@ class GameViewModelTest {
     @Test
     fun `guess with game won should notify game won`() = coroutineRule.runBlockingTest {
         val gameId = GameId(GAME_ID_MOCK)
-        val shift = Shift(attempt = 1, guess = mock(), answer = Answer(bulls = 4, cows = 0), maxAttempts = 2)
+        val shift = Shift(
+            attempt = 1,
+            guess = mock(),
+            answer = Answer(bulls = 4, cows = 0),
+            maxAttempts = 2
+        )
         val guess = Guess(first = 1, second = 2, third = 3, fourth = 4)
         val game = mock<Game> { on { guess(guess) } doReturn shift }
         val repository = mock<GameRepository> {
-            onBlocking { game(id = gameId) } doReturn game
-            onBlocking { update(id = gameId, shift = shift) } doReturn Unit
+            on { shiftsFor(id = GameId(GAME_ID_MOCK)) } doReturn mock()
+            onBlocking { obtainGameBy(id = gameId) } doReturn game
+            onBlocking { addShift(gameId = gameId, shift = shift) } doReturn Unit
         }
         val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
 
@@ -111,12 +123,18 @@ class GameViewModelTest {
     @Test
     fun `guess with game over should notify game over`() = coroutineRule.runBlockingTest {
         val gameId = GameId(GAME_ID_MOCK)
-        val shift = Shift(attempt = 2, guess = mock(), answer = Answer(bulls = 2, cows = 0), maxAttempts = 2)
+        val shift = Shift(
+            attempt = 2,
+            guess = mock(),
+            answer = Answer(bulls = 2, cows = 0),
+            maxAttempts = 2
+        )
         val guess = Guess(first = 1, second = 2, third = 3, fourth = 4)
         val game = mock<Game> { on { guess(guess) } doReturn shift }
         val repository = mock<GameRepository> {
-            onBlocking { game(id = gameId) } doReturn game
-            onBlocking { update(id = gameId, shift = shift) } doReturn Unit
+            on { shiftsFor(id = GameId(GAME_ID_MOCK)) } doReturn mock()
+            onBlocking { obtainGameBy(id = gameId) } doReturn game
+            onBlocking { addShift(gameId = gameId, shift = shift) } doReturn Unit
         }
         val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
 
@@ -128,12 +146,18 @@ class GameViewModelTest {
     @Test
     fun `guess with in progress game should notify in progress`() = coroutineRule.runBlockingTest {
         val gameId = GameId(GAME_ID_MOCK)
-        val shift = Shift(attempt = 2, guess = mock(), answer = Answer(bulls = 2, cows = 0), maxAttempts = 4)
+        val shift = Shift(
+            attempt = 2,
+            guess = mock(),
+            answer = Answer(bulls = 2, cows = 0),
+            maxAttempts = 4
+        )
         val guess = Guess(first = 1, second = 2, third = 3, fourth = 4)
         val game = mock<Game> { on { guess(guess) } doReturn shift }
         val repository = mock<GameRepository> {
-            onBlocking { game(id = gameId) } doReturn game
-            onBlocking { update(id = gameId, shift = shift) } doReturn Unit
+            on { shiftsFor(id = GameId(GAME_ID_MOCK)) } doReturn mock()
+            onBlocking { obtainGameBy(id = gameId) } doReturn game
+            onBlocking { addShift(gameId = gameId, shift = shift) } doReturn Unit
         }
         val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
 
@@ -145,8 +169,8 @@ class GameViewModelTest {
     private fun LiveData<GameState>.assertEqualTo(expected: GameState) =
         assertThat(value).isEqualTo(expected)
 
-    private fun savedStateHandle(gameId: String = "some_id") = mock<SavedStateHandle> {
-        on { get<String>(GAME_ID_KEY) } doReturn gameId
+    private fun savedStateHandle(gameId: Long) = mock<SavedStateHandle> {
+        on { get<Long>(GAME_ID_KEY) } doReturn gameId
     }
 
     private fun savedStateHandle(gameIdError: Throwable) = mock<SavedStateHandle> {

@@ -3,5 +3,5 @@ apply plugin: 'com.android.library'
 apply from: "$rootDir/.dna/module-kotlin-android.gradle"
 
 dependencies {
-    implementation core.liveData
+    implementation core.coroutines
 }

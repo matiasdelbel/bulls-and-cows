@@ -1,10 +1,10 @@
 package com.delbel.bullscows.game.domain.core
 
 data class Secret(
-    private val first: Int,
-    private val second: Int,
-    private val third: Int,
-    private val fourth: Int
+    val first: Int,
+    val second: Int,
+    val third: Int,
+    val fourth: Int
 ) {
 
     init {

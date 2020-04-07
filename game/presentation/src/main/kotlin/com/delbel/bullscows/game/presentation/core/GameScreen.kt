@@ -10,12 +10,19 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.delbel.bullscows.game.domain.Shift
+import com.delbel.bullscows.game.domain.core.Secret
+import com.delbel.bullscows.game.domain.repository.GameRepository
 import com.delbel.bullscows.game.presentation.databinding.GameScreenBoardBinding
 import com.delbel.dagger.viewmodel.savedstate.ext.viewModels
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class GameScreen : Fragment() {
+
+    // TODO remove this! Hardcoded until we pass the actually id from other screen
+    @Inject
+    lateinit var repository: GameRepository
 
     @Inject
     internal lateinit var factory: GameViewModel.Factory
@@ -38,14 +45,21 @@ class GameScreen : Fragment() {
     ): View {
         _viewBinding = GameScreenBoardBinding.inflate(inflater, container, false)
         setUpViewInitialState()
+        // TODO handle guess button
 
         return viewBinding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        arguments = bundleOf("game_id" to "id") // TODO hardcoded
-        viewModel.shifts.observe(viewLifecycleOwner, Observer(::handleShiftsUpdates))
+
+        // TODO remove this! Hardcoded until we pass the actually id from other screen
+        runBlocking {
+            val id = repository.saveGame(Secret(1, 2, 3, 4), maxAttempts = 7)
+            arguments = bundleOf("game_id" to id.id)
+            // TODO move to the onActivityCreated
+            viewModel.shifts.observe(viewLifecycleOwner, Observer(::handleShiftsUpdates))
+        }
     }
 
     override fun onDestroyView() {

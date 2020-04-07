@@ -4,4 +4,14 @@ apply from: "$rootDir/.dna/module-kotlin-android.gradle"
 
 dependencies {
     implementation project(':game:domain')
+
+    implementation core.dagger
+    kapt core.daggerCompiler
+
+    implementation core.coroutines
+
+    implementation gateway.room
+    kapt gateway.roomCompiler
+
+    testImplementation test.coroutines
 }

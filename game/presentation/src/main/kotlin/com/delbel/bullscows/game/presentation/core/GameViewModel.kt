@@ -19,11 +19,11 @@ internal class GameViewModel @AssistedInject constructor(
     @AssistedInject.Factory
     interface Factory : AssistedViewModelFactory<GameViewModel>
 
-    private val id = GameId(id = handle.get<String>("game_id")!!)
+    private val id = GameId(id = handle.get<Long>("game_id")!!)
     private val _state = MutableLiveData<GameState>()
 
     val state: LiveData<GameState> get() = _state
-    val shifts = repository.shifts(id)
+    val shifts = repository.shiftsFor(id).asLiveData()
 
     fun guess(first: Int, second: Int, third: Int, fourth: Int) = viewModelScope.launch {
         runCatching { guess(guess = Guess(first, second, third, fourth)) }
@@ -32,9 +32,9 @@ internal class GameViewModel @AssistedInject constructor(
     }
 
     private suspend fun guess(guess: Guess): Shift {
-        val game = repository.game(id)
+        val game = repository.obtainGameBy(id)
         val shift = game.guess(guess)
-        repository.update(id, shift)
+        repository.addShift(gameId = id, shift = shift)
 
         return shift
     }
