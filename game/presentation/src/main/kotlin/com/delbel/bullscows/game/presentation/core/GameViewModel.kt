@@ -41,7 +41,7 @@ internal class GameViewModel @AssistedInject constructor(
 
     private fun handleShift(shift: Shift) = shift.executeIf(
         won = { _state.value = GameWon(gameId = id) },
-        over = { _state.value = GameOver(gameId = id) },
+        lost = { _state.value = GameOver(gameId = id) },
         inProgress = { _state.value = GameInProgress }
     )
 

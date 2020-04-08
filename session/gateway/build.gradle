@@ -4,6 +4,7 @@ apply from: "$rootDir/.dna/module-kotlin-android.gradle"
 
 dependencies {
     implementation project(':session:domain')
+    implementation project(':game:domain')
 
     implementation core.dagger
     kapt core.daggerCompiler
