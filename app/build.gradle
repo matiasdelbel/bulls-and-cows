@@ -5,6 +5,12 @@ android {
     defaultConfig.applicationId = "com.delbel.bullscows.app"
 
     viewBinding.enabled = true
+
+    android {
+        packagingOptions {
+            exclude("META-INF/*.kotlin_module")
+        }
+    }
 }
 
 dependencies {
