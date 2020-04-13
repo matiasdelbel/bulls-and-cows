@@ -14,6 +14,9 @@ dependencies {
     kapt core.daggerProcessor
     kapt core.daggerCompiler
 
+    implementation core.navigationFragment
+    implementation core.navigationUi
+
     implementation presentation.assistedInjection
     kapt presentation.assistedInjectionCompiler
 

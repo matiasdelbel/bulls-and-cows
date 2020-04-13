@@ -1,11 +1,14 @@
 package com.delbel.bullscows.game.presentation.core
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import com.delbel.bullscows.game.domain.Shift
 import com.delbel.bullscows.game.domain.core.Secret
 import com.delbel.bullscows.game.domain.repository.GameRepository
@@ -85,10 +88,17 @@ class GameScreen : Fragment(R.layout.game_screen_board) {
 
     // TODO
     private fun handleGameStateUpdates(gameState: GameState) = when (gameState) {
-        is GameWon -> { }
+        is GameWon -> navigateToGameWonScreen(gameState)
         is GameOver -> { }
         is GameInProgress -> { }
         is MalformedGuessError -> { }
         is UnrecoverableError -> { }
+    }
+
+    private fun navigateToGameWonScreen(gameWon: GameWon) {
+        val deepLink = Uri.parse(getString(R.string.game_won_deep_link, gameWon.gameId.id))
+        val options = NavOptions.Builder().setPopUpTo(R.id.game_graph, true).build()
+
+        findNavController().navigate(deepLink, options)
     }
 }

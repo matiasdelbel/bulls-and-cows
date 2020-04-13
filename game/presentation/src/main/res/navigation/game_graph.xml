@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/game_graph"
+    app:startDestination="@id/screen_game"
+    tools:ignore="UnusedNavigation">
+
+    <fragment
+        android:id="@+id/screen_game"
+        android:name="com.delbel.bullscows.game.presentation.core.GameScreen"
+        tools:layout="@layout/game_screen_board" />
+
+</navigation>

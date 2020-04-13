@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="you_guessed">Guessed!</string>
+    <string name="secret">The secret was %1$s.</string>
+    <string name="next">Continue</string>
+</resources>
