@@ -16,6 +16,6 @@ internal interface ShiftDao {
     @Query("SELECT * FROM shifts WHERE gameId = :gameId")
     fun obtainFor(gameId: Long): Flow<List<ShiftDo>>
 
-    @Query("SELECT * FROM shifts WHERE gameId = :gameId ORDER BY attempt ASC LIMIT 1")
+    @Query("SELECT * FROM shifts WHERE gameId = :gameId ORDER BY attempt DESC LIMIT 1")
     suspend fun obtainLastFor(gameId: Long): ShiftDo?
 }
