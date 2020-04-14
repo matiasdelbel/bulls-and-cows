@@ -89,7 +89,7 @@ class GameScreen : Fragment(R.layout.game_screen_board) {
     // TODO
     private fun handleGameStateUpdates(gameState: GameState) = when (gameState) {
         is GameWon -> navigateToGameWonScreen(gameState)
-        is GameOver -> { }
+        is GameOver -> navigateToGameOverScreen(gameState)
         is GameInProgress -> { }
         is MalformedGuessError -> { }
         is UnrecoverableError -> { }
@@ -97,6 +97,13 @@ class GameScreen : Fragment(R.layout.game_screen_board) {
 
     private fun navigateToGameWonScreen(gameWon: GameWon) {
         val deepLink = Uri.parse(getString(R.string.game_won_deep_link, gameWon.gameId.id))
+        val options = NavOptions.Builder().setPopUpTo(R.id.game_graph, true).build()
+
+        findNavController().navigate(deepLink, options)
+    }
+
+    private fun navigateToGameOverScreen(gameOver: GameOver) {
+        val deepLink = Uri.parse(getString(R.string.game_over_deep_link, gameOver.gameId.id))
         val options = NavOptions.Builder().setPopUpTo(R.id.game_graph, true).build()
 
         findNavController().navigate(deepLink, options)

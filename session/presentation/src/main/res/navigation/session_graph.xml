@@ -16,4 +16,13 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/screen_lost"
+        android:name="com.delbel.bullscows.session.presentation.lost.LostScreen"
+        tools:layout="@layout/screen_lost">
+
+        <deepLink app:uri="bulls-cows://session/lost?gameId={game_id}" />
+
+    </fragment>
+
 </navigation>
