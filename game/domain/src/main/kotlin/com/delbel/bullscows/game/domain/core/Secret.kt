@@ -13,4 +13,6 @@ data class Secret(
     }
 
     fun guess(guess: Guess) = guess.guess(first, second, third, fourth)
+
+    fun asString() = "$first $second $third $fourth"
 }

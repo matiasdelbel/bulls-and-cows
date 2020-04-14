@@ -28,4 +28,13 @@ class SecretTest {
 
         verify(guess).guess(first = 1, second = 2, third = 3, fourth = 4)
     }
+
+    @Test
+    fun `asString should return the secret values as string`() {
+        val secret = Secret(first = 1, second = 2, third = 3, fourth = 4)
+
+        val result = secret.asString()
+
+        assertThat(result).isEqualTo("1 2 3 4")
+    }
 }

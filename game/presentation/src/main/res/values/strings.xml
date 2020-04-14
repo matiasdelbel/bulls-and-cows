@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="game_guess_hint_first">1</string>
-    <string name="game_guess_hint_second">3</string>
-    <string name="game_guess_hint_third">4</string>
-    <string name="game_guess_hint_fourth">0</string>
+    <string name="game_guess_hint_second">2</string>
+    <string name="game_guess_hint_third">3</string>
+    <string name="game_guess_hint_fourth">4</string>
 
     <string name="game_guess_action">Guess</string>
+
+    <string name="game_won_deep_link" translatable="false">bulls-cows://session/won?gameId=%1$d</string>
 </resources>

@@ -18,4 +18,8 @@ internal class LocalCurrentSession @Inject constructor(
 
         return SessionId(value = sessionId)
     }
+
+    override fun update(id: SessionId) {
+        preferences.edit().putLong(CURRENT_SESSION_ID, id.value).apply()
+    }
 }

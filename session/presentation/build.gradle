@@ -5,6 +5,7 @@ android.viewBinding.enabled = true
 
 dependencies {
     implementation project(':session:domain')
+    implementation project(':game:domain')
 
     implementation core.liveData
 
@@ -14,8 +15,15 @@ dependencies {
     kapt core.daggerProcessor
     kapt core.daggerCompiler
 
+    implementation core.navigationFragment
+    implementation core.navigationUi
+
+    implementation presentation.assistedInjection
+    kapt presentation.assistedInjectionCompiler
+
     implementation presentation.fragment
     implementation presentation.viewModel
+    implementation presentation.savedState
     implementation presentation.constraintLayout
     implementation presentation.material
 
