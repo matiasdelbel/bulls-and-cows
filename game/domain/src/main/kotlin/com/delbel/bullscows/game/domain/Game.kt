@@ -4,9 +4,10 @@ import com.delbel.bullscows.game.domain.core.Answer
 import com.delbel.bullscows.game.domain.core.Guess
 import com.delbel.bullscows.game.domain.core.Secret
 import com.delbel.bullscows.game.domain.exception.GameNoStartedException
+import java.lang.Long.MAX_VALUE
 
 data class Game(
-    val id: GameId,
+    val id: GameId = GameId(),
     val secret: Secret,
     val maxAttempts: Int,
 
@@ -30,4 +31,4 @@ data class Game(
         ?: Shift(answer = answer, guess = guess, maxAttempts = maxAttempts)
 }
 
-inline class GameId(val id: Long)
+inline class GameId(val id: Long = MAX_VALUE)

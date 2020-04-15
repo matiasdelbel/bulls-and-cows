@@ -14,11 +14,20 @@ internal class LocalSessionIdRepository @Inject constructor(
         private const val CURRENT_SESSION_ID = "CURRENT_SESSION_ID"
     }
 
+    override fun registerCurrent(id: SessionId) = updateCurrent(id)
+
     override suspend fun obtainCurrentOrCreate(creator: suspend () -> SessionId): SessionId {
         val sessionId = obtainCurrent()
         if (sessionId.value == MIN_VALUE) updateCurrent(id = creator())
 
         return obtainCurrent()
+    }
+
+    override suspend fun obtainCurrentOrThrow(exception: Exception): SessionId {
+        val sessionId = obtainCurrent()
+        if (sessionId.value == MIN_VALUE) throw exception
+
+        return sessionId
     }
 
     override fun removeCurrent() = updateCurrent(id = SessionId(MIN_VALUE))

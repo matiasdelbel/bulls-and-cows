@@ -10,7 +10,6 @@ import dagger.Module
 @Module(includes = [AssistedInject_AssistedViewModelModule::class])
 internal interface AssistedViewModelModule
 
-// TODO workaround for: https://github.com/square/AssistedInject/issues/81
 internal interface AssistedViewModelFactory<T : ViewModel> : ViewModelFactory<T> {
 
     override fun create(handle: SavedStateHandle): T

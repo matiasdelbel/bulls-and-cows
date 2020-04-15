@@ -4,26 +4,18 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.delbel.bullscows.game.domain.Shift
-import com.delbel.bullscows.game.domain.core.Secret
-import com.delbel.bullscows.game.domain.repository.GameRepository
 import com.delbel.bullscows.game.presentation.R
 import com.delbel.bullscows.game.presentation.databinding.GameScreenBoardBinding
 import com.delbel.dagger.viewmodel.savedstate.ext.viewModels
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class GameScreen : Fragment(R.layout.game_screen_board) {
-
-    // TODO remove this! Hardcoded until we pass the actually id from other screen
-    @Inject
-    lateinit var repository: GameRepository
 
     @Inject
     internal lateinit var factory: GameViewModel.Factory
@@ -46,12 +38,6 @@ class GameScreen : Fragment(R.layout.game_screen_board) {
         super.onActivityCreated(savedInstanceState)
         _viewBinding = GameScreenBoardBinding.bind(requireView())
         setUpViewInitialState()
-
-        // TODO remove this! Hardcoded until we pass the actually id from other screen
-        runBlocking {
-            val id = repository.saveGame(Secret(1, 2, 3, 4), maxAttempts = 7)
-            arguments = bundleOf("game_id" to id.id)
-        }
 
         viewModel.shifts.observe(viewLifecycleOwner, Observer(::handleShiftsUpdates))
         viewModel.state.observe(viewLifecycleOwner, Observer(::handleGameStateUpdates))
