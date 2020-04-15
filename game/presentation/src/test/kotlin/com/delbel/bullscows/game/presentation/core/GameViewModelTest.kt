@@ -44,7 +44,7 @@ class GameViewModelTest {
         val repository = mock<GameRepository> {
             on { shiftsFor(id = GameId(GAME_ID_MOCK)) } doReturn mock()
         }
-        val viewModel = GameViewModel(handle = savedStateHandle(gameId = GAME_ID_MOCK), repository = repository)
+        val viewModel = GameViewModel(handle = savedStateHandle(), repository = repository)
 
         viewModel.guess(first = 1, second = 1, third = 3, fourth = 4)
 
@@ -57,7 +57,7 @@ class GameViewModelTest {
             on { shiftsFor(id = GameId(GAME_ID_MOCK)) } doReturn mock()
             onBlocking { obtainGameBy(id = GameId(GAME_ID_MOCK)) } doThrow RuntimeException()
         }
-        val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
+        val viewModel = GameViewModel(savedStateHandle(), repository)
 
         viewModel.guess(first = 1, second = 2, third = 3, fourth = 4)
 
@@ -72,7 +72,7 @@ class GameViewModelTest {
             on { shiftsFor(id = GameId(GAME_ID_MOCK)) } doReturn mock()
             onBlocking { obtainGameBy(id = GameId(GAME_ID_MOCK)) } doReturn game
         }
-        val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
+        val viewModel = GameViewModel(savedStateHandle(), repository)
 
         viewModel.guess(first = 1, second = 2, third = 3, fourth = 4)
 
@@ -90,7 +90,7 @@ class GameViewModelTest {
             onBlocking { obtainGameBy(id = gameId) } doReturn game
             onBlocking { addShift(gameId = gameId, shift = shift) } doThrow RuntimeException()
         }
-        val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
+        val viewModel = GameViewModel(savedStateHandle(), repository)
 
         viewModel.guess(first = 1, second = 2, third = 3, fourth = 4)
 
@@ -113,7 +113,7 @@ class GameViewModelTest {
             onBlocking { obtainGameBy(id = gameId) } doReturn game
             onBlocking { addShift(gameId = gameId, shift = shift) } doReturn Unit
         }
-        val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
+        val viewModel = GameViewModel(savedStateHandle(), repository)
 
         viewModel.guess(first = 1, second = 2, third = 3, fourth = 4)
 
@@ -136,7 +136,7 @@ class GameViewModelTest {
             onBlocking { obtainGameBy(id = gameId) } doReturn game
             onBlocking { addShift(gameId = gameId, shift = shift) } doReturn Unit
         }
-        val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
+        val viewModel = GameViewModel(savedStateHandle(), repository)
 
         viewModel.guess(first = 1, second = 2, third = 3, fourth = 4)
 
@@ -159,7 +159,7 @@ class GameViewModelTest {
             onBlocking { obtainGameBy(id = gameId) } doReturn game
             onBlocking { addShift(gameId = gameId, shift = shift) } doReturn Unit
         }
-        val viewModel = GameViewModel(savedStateHandle(gameId = GAME_ID_MOCK), repository)
+        val viewModel = GameViewModel(savedStateHandle(), repository)
 
         viewModel.guess(first = 1, second = 2, third = 3, fourth = 4)
 
@@ -169,8 +169,8 @@ class GameViewModelTest {
     private fun LiveData<GameState>.assertEqualTo(expected: GameState) =
         assertThat(value).isEqualTo(expected)
 
-    private fun savedStateHandle(gameId: Long) = mock<SavedStateHandle> {
-        on { get<Long>(GAME_ID_KEY) } doReturn gameId
+    private fun savedStateHandle() = mock<SavedStateHandle> {
+        on { get<String>(GAME_ID_KEY) } doReturn GAME_ID_MOCK.toString()
     }
 
     private fun savedStateHandle(gameIdError: Throwable) = mock<SavedStateHandle> {

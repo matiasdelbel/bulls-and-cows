@@ -10,6 +10,7 @@ import com.delbel.bullscows.game.gateway.LocalGameRepository
 import com.delbel.bullscows.game.gateway.MainCoroutineRule
 import com.delbel.bullscows.game.gateway.database.GameDao
 import com.delbel.bullscows.game.gateway.database.ShiftDao
+import com.delbel.bullscows.game.gateway.factory.GameFactory
 import com.delbel.bullscows.game.gateway.model.GameDo
 import com.delbel.bullscows.game.gateway.model.ShiftDo
 import com.google.common.truth.Truth.assertThat
@@ -28,13 +29,15 @@ class LocalGameRepositoryTest {
     val mainRule = MainCoroutineRule()
 
     @Test
-    fun `saveGame should create DO and added to the DB`() = mainRule.runBlockingTest {
+    fun `create should obtain from factory and save on DB`() = mainRule.runBlockingTest {
         val secret = Secret(first = 1, second = 2, third = 3, fourth = 4)
-        val gameDo = GameDo.createFrom(secret = secret, maxAttempts = 2)
+        val game = Game(secret = secret, maxAttempts = 7)
+        val factory = mock<GameFactory> { on { create() } doReturn game }
+        val gameDo = GameDo.createFrom(game = game)
         val gameDao = mock<GameDao> { onBlocking { insert(gameDo) } doReturn 3 }
-        val repository = LocalGameRepository(gameDao = gameDao, shiftDao = mock())
+        val repository = LocalGameRepository(gameDao = gameDao, shiftDao = mock(), gameFactory = factory)
 
-        val gameId = repository.saveGame(secret = secret, maxAttempts = 2)
+        val gameId = repository.create()
 
         assertThat(gameId).isEqualTo(GameId(id = 3))
     }
@@ -47,7 +50,7 @@ class LocalGameRepositoryTest {
         val gameDo = mock<GameDo> { on { asModel(currentShift = shift) } doReturn expectedGame }
         val gameDao = mock<GameDao> { onBlocking { obtainBy(gameId = 12) } doReturn gameDo }
         val shiftDao = mock<ShiftDao> { onBlocking { obtainLastFor(gameId = 12) } doReturn shiftDo }
-        val repository = LocalGameRepository(gameDao = gameDao, shiftDao = shiftDao)
+        val repository = LocalGameRepository(gameDao = gameDao, shiftDao = shiftDao, gameFactory = mock())
 
         val game = repository.obtainGameBy(id = GameId(12))
 
@@ -61,7 +64,7 @@ class LocalGameRepositoryTest {
         val shift = Shift(attempt = 1, guess = guess, answer = answer, maxAttempts = 3)
         val shiftDo = ShiftDo.createFrom(id = GameId(id = 12), shift = shift)
         val shiftDao = mock<ShiftDao>()
-        val repository = LocalGameRepository(gameDao = mock(), shiftDao = shiftDao)
+        val repository = LocalGameRepository(gameDao = mock(), shiftDao = shiftDao, gameFactory = mock())
 
         repository.addShift(gameId = GameId(12), shift = shift)
 
@@ -74,7 +77,7 @@ class LocalGameRepositoryTest {
         val shiftDo = mock<ShiftDo> { on { asModel() } doReturn expectedShift }
         val shiftsFlow = flow { emit(listOf(shiftDo)) }
         val shiftDao = mock<ShiftDao> { on { obtainFor(gameId = 12) } doReturn shiftsFlow }
-        val repository = LocalGameRepository(gameDao = mock(), shiftDao = shiftDao)
+        val repository = LocalGameRepository(gameDao = mock(), shiftDao = shiftDao, gameFactory = mock())
 
         val shifts = repository.shiftsFor(id = GameId(12)).single()
 

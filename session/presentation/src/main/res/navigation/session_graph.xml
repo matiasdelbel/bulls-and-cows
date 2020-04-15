@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TODO change startDestination to menu screen -->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/session_graph"
-    app:startDestination="@id/screen_won"
+    app:startDestination="@id/screen_menu"
     tools:ignore="UnusedNavigation">
+
+    <fragment
+        android:id="@+id/screen_menu"
+        android:name="com.delbel.bullscows.session.presentation.menu.MenuScreen"
+        tools:layout="@layout/screen_menu" />
 
     <fragment
         android:id="@+id/screen_won"

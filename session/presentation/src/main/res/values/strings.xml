@@ -2,6 +2,14 @@
 <resources>
     <string name="you_guessed">Guessed!</string>
     <string name="you_lost">Game Over!</string>
+
     <string name="secret">The secret was %1$s.</string>
+
     <string name="next">Continue</string>
+
+    <string name="new_game">New Game</string>
+    <string name="continue_game">Continue</string>
+    <string name="best_scores">Best Scores</string>
+
+    <string name="game_deep_link" translatable="false">bulls-cows://game?gameId=%1$d</string>
 </resources>

@@ -6,6 +6,8 @@
     app:startDestination="@id/screen_game"
     tools:ignore="UnusedNavigation">
 
+    <deepLink app:uri="bulls-cows://game?gameId={game_id}" />
+
     <fragment
         android:id="@+id/screen_game"
         android:name="com.delbel.bullscows.game.presentation.core.GameScreen"

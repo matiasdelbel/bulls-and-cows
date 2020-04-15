@@ -18,6 +18,21 @@ class LocalSessionIdRepositoryTest {
     val mainRule = MainCoroutineRule()
 
     @Test
+    fun `registerCurrent should update current session id`() = mainRule.runBlockingTest {
+        val preferencesEditor = mock<SharedPreferences.Editor> {
+            on { putLong(any(), any()) } doReturn mock
+        }
+        val preferences = mock<SharedPreferences> { on { edit() } doReturn preferencesEditor }
+        val repository = LocalSessionIdRepository(preferences)
+        val sessionId = SessionId(value = 123)
+
+        repository.registerCurrent(sessionId)
+
+        verify(preferencesEditor).putLong("CURRENT_SESSION_ID", 123)
+        verify(preferencesEditor).apply()
+    }
+
+    @Test
     fun `obtainCurrentOrCreate should return current session id`() = mainRule.runBlockingTest {
         val preferences = mock<SharedPreferences> {
             on { getLong("CURRENT_SESSION_ID", MIN_VALUE) } doReturn 123

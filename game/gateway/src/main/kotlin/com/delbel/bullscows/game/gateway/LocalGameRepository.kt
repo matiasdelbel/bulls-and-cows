@@ -7,6 +7,7 @@ import com.delbel.bullscows.game.domain.core.Secret
 import com.delbel.bullscows.game.domain.repository.GameRepository
 import com.delbel.bullscows.game.gateway.database.GameDao
 import com.delbel.bullscows.game.gateway.database.ShiftDao
+import com.delbel.bullscows.game.gateway.factory.GameFactory
 import com.delbel.bullscows.game.gateway.model.GameDo
 import com.delbel.bullscows.game.gateway.model.ShiftDo
 import kotlinx.coroutines.flow.Flow
@@ -15,12 +16,13 @@ import javax.inject.Inject
 
 internal class LocalGameRepository @Inject constructor(
     private val gameDao: GameDao,
-    private val shiftDao: ShiftDao
+    private val shiftDao: ShiftDao,
+    private val gameFactory: GameFactory
 ) : GameRepository {
 
-    override suspend fun saveGame(secret: Secret, maxAttempts: Int): GameId {
-        val gameDo = GameDo.createFrom(secret, maxAttempts)
-        val id = gameDao.insert(game = gameDo)
+    override suspend fun create(): GameId {
+        val game = gameFactory.create()
+        val id = gameDao.insert(game = GameDo.createFrom(game))
 
         return GameId(id = id)
     }

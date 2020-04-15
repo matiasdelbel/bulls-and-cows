@@ -19,7 +19,7 @@ internal class GameViewModel @AssistedInject constructor(
     @AssistedInject.Factory
     interface Factory : AssistedViewModelFactory<GameViewModel>
 
-    private val id = GameId(id = handle.get<Long>("game_id")!!)
+    private val id = GameId(id = handle.get<String>("game_id")!!.toLong())
     private val _state = MutableLiveData<GameState>()
 
     val state: LiveData<GameState> get() = _state

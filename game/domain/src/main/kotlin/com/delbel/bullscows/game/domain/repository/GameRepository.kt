@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GameRepository {
 
-    suspend fun saveGame(secret: Secret, maxAttempts: Int): GameId
+    suspend fun create(): GameId
 
     suspend fun obtainGameBy(id: GameId): Game
 
