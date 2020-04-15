@@ -6,7 +6,7 @@ internal sealed class GameState
 
 internal data class GameWon(val gameId: GameId) : GameState()
 
-internal data class GameOver(private val gameId: GameId) : GameState()
+internal data class GameOver(val gameId: GameId) : GameState()
 
 internal object GameInProgress : GameState()
 
