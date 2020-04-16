@@ -48,4 +48,27 @@ class WonViewModelTest {
         }
         verify(sessionRepository).addGameWon(id = SessionId(45), game = game)
     }
+
+    @Test
+    fun `createGame update game and notify id`() = coroutineRule.runBlockingTest {
+        val savedState = mock<SavedStateHandle> { on { get<String>("game_id") } doReturn "123" }
+        val currentSessionRepository = mock<CurrentSessionRepository> {
+            onBlocking { obtainSessionIdOrCreate(creator = any()) } doReturn SessionId(value = 45)
+        }
+        val gameId = mock<GameId>()
+        val gameRepository = mock<GameRepository> {
+            onBlocking { obtainGameBy(id = GameId(id = 123)) } doReturn mock()
+            onBlocking { create() } doReturn gameId
+        }
+        val viewModel = WonViewModel(savedState, currentSessionRepository, mock(), gameRepository)
+        val observer = mock<Observer<GameId>>()
+
+        viewModel.createGame().observeForever(observer)
+
+        argumentCaptor<GameId> {
+            verify(observer).onChanged(capture())
+            assertThat(firstValue).isEqualTo(gameId)
+        }
+        verify(currentSessionRepository).updateGameId(gameId)
+    }
 }

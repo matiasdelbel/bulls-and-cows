@@ -30,4 +30,11 @@ internal class WonViewModel @AssistedInject constructor(
 
         emit(game)
     }
+
+    fun createGame() = liveData {
+        val createdGameId = gameRepository.create()
+
+        currentSessionRepository.updateGameId(createdGameId)
+        emit(value = createdGameId)
+    }
 }
