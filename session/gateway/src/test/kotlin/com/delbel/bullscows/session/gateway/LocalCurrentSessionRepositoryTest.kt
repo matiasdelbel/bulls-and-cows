@@ -16,7 +16,7 @@ class LocalCurrentSessionRepositoryTest {
     val mainRule = MainCoroutineRule()
 
     @Test
-    fun `registerSessionId should update current session id`() = mainRule.runBlockingTest {
+    fun `register should update current session id and game id`() = mainRule.runBlockingTest {
         val preferencesEditor = mock<SharedPreferences.Editor> {
             on { putLong(any(), any()) } doReturn mock
         }
@@ -30,6 +30,21 @@ class LocalCurrentSessionRepositoryTest {
         verify(preferencesEditor).putLong("CURRENT_SESSION_ID", 123)
         verify(preferencesEditor).putLong("CURRENT_GAME_ID", 345)
         verify(preferencesEditor, times(2)).apply()
+    }
+
+    @Test
+    fun `updateGameId without should update current game id`() = mainRule.runBlockingTest {
+        val preferencesEditor = mock<SharedPreferences.Editor> {
+            on { putLong(any(), any()) } doReturn mock
+        }
+        val preferences = mock<SharedPreferences> { on { edit() } doReturn preferencesEditor }
+        val gameId = GameId(id = 123)
+        val repository = LocalCurrentSessionRepository(preferences)
+
+        repository.updateGameId(gameId)
+
+        verify(preferencesEditor).putLong("CURRENT_GAME_ID", 123)
+        verify(preferencesEditor).apply()
     }
 
     @Test

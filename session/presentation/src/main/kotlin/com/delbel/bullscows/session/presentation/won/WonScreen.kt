@@ -1,9 +1,12 @@
 package com.delbel.bullscows.session.presentation.won
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.session.presentation.R
 import com.delbel.bullscows.session.presentation.databinding.ScreenWonBinding
 import com.delbel.dagger.viewmodel.savedstate.ext.viewModels
@@ -27,16 +30,24 @@ class WonScreen : Fragment(R.layout.screen_won) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         _viewBinding = ScreenWonBinding.bind(requireView())
+        setUpCContinueAction()
 
         viewModel.game.observe(viewLifecycleOwner, Observer {
             viewBinding.secret.text = getString(R.string.secret, it.secret.asString())
         })
-
-        viewBinding.next.setOnClickListener { TODO() }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _viewBinding = null
+    }
+
+    private fun setUpCContinueAction() = viewBinding.next.setOnClickListener {
+        viewModel.createGame().observe(viewLifecycleOwner, Observer(::navigateToGameScreen))
+    }
+
+    private fun navigateToGameScreen(gameId: GameId) {
+        val deepLink = Uri.parse(getString(R.string.game_deep_link, gameId.id))
+        findNavController().navigate(deepLink)
     }
 }

@@ -7,6 +7,8 @@ interface CurrentSessionRepository {
 
     fun register(sessionId: SessionId, gameId: GameId)
 
+    fun updateGameId(gameId: GameId)
+
     suspend fun obtainSessionIdOrCreate(creator: suspend () -> SessionId): SessionId
 
     suspend fun obtainSessionIdOrThrow(exception: Exception): SessionId

@@ -21,6 +21,8 @@ internal class LocalCurrentSessionRepository @Inject constructor(
         update(CURRENT_GAME_ID, value = gameId.id)
     }
 
+    override fun updateGameId(gameId: GameId) = update(CURRENT_GAME_ID, value = gameId.id)
+
     override suspend fun obtainSessionIdOrCreate(creator: suspend () -> SessionId): SessionId {
         val sessionId = obtainSessionId()
         if (sessionId.value == MIN_VALUE) update(CURRENT_SESSION_ID, value = creator().value)
@@ -37,8 +39,7 @@ internal class LocalCurrentSessionRepository @Inject constructor(
 
     override fun removeSessionId() = update(CURRENT_SESSION_ID, MIN_VALUE)
 
-    private fun obtainSessionId() =
-        SessionId(value = preferences.getLong(CURRENT_SESSION_ID, MIN_VALUE))
+    private fun obtainSessionId() = SessionId(value = preferences.getLong(CURRENT_SESSION_ID, MIN_VALUE))
 
     private fun update(key: String, value: Long) = preferences.edit().putLong(key, value).apply()
 }
