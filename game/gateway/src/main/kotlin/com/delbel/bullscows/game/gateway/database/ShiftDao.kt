@@ -13,7 +13,7 @@ internal interface ShiftDao {
     @Insert(onConflict = REPLACE)
     suspend fun insert(shift: ShiftDo)
 
-    @Query("SELECT * FROM shifts WHERE gameId = :gameId")
+    @Query("SELECT * FROM shifts WHERE gameId = :gameId ORDER BY attempt DESC")
     fun obtainFor(gameId: Long): Flow<List<ShiftDo>>
 
     @Query("SELECT * FROM shifts WHERE gameId = :gameId ORDER BY attempt DESC LIMIT 1")

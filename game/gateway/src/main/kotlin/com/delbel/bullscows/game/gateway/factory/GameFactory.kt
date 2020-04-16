@@ -6,10 +6,21 @@ import javax.inject.Inject
 
 class GameFactory @Inject constructor() {
 
-    fun create(): Game {
-        // TODO implement me
-        val secret = Secret(first = 1, second = 2, third = 3, fourth = 4)
+    companion object {
+        private val SECRET_POSSIBLE_VALUES = listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+        private const val MAX_ATTEMPTS = 7
+    }
 
-        return Game(secret = secret, maxAttempts = 7)
+    fun create() = Game(secret = createSecret(), maxAttempts = MAX_ATTEMPTS)
+
+    private fun createSecret(): Secret {
+        val secretValues = SECRET_POSSIBLE_VALUES.shuffled().take(n = 4).shuffled()
+
+        return Secret(
+            first = secretValues[0],
+            second = secretValues[1],
+            third = secretValues[2],
+            fourth = secretValues[3]
+        )
     }
 }
