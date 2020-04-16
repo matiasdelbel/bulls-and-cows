@@ -33,6 +33,10 @@ class WonScreen : Fragment(R.layout.screen_won) {
         _viewBinding = ScreenWonBinding.bind(requireView())
         setUpCContinueAction()
 
+        viewModel.session.observe(viewLifecycleOwner, Observer {
+            viewBinding.points.text = getString(R.string.points_on_won, it.points, it.guessed)
+        })
+
         viewModel.game.observe(viewLifecycleOwner, Observer {
             viewBinding.secret.text = getString(R.string.secret, it.secret.asString())
         })

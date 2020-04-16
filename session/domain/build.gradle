@@ -4,4 +4,6 @@ apply from: "$rootDir/.dna/module-kotlin-android.gradle"
 
 dependencies {
     implementation project(':game:domain')
+
+    implementation core.coroutines
 }

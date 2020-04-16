@@ -33,6 +33,10 @@ class LostScreen : Fragment(R.layout.screen_lost) {
         _viewBinding = ScreenLostBinding.bind(requireView())
         setUpCContinueAction()
 
+        viewModel.session.observe(viewLifecycleOwner, Observer {
+            viewBinding.points.text = getString(R.string.points_on_lost, it.points, it.guessed)
+        })
+
         viewModel.game.observe(viewLifecycleOwner, Observer {
             viewBinding.secret.text = getString(R.string.secret, it.secret.asString())
         })

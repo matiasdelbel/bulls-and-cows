@@ -22,7 +22,7 @@ internal class MenuViewModel @Inject constructor(
     }
 
     private fun notifyCurrentSessionState() = viewModelScope.launch {
-        runCatching { currentSessionRepository.obtainSessionIdOrThrow(exception = RuntimeException()) }
+        runCatching { currentSessionRepository.obtainSessionId() }
             .onSuccess { _sessionState.value = RunningSession }
             .onFailure { _sessionState.value = NoSession }
     }
@@ -42,7 +42,7 @@ internal class MenuViewModel @Inject constructor(
     }
 
     private suspend fun currentGameId(): GameId {
-        val gameId = currentSessionRepository.obtainGameIdOrThrow(exception = RuntimeException())
+        val gameId = currentSessionRepository.obtainGameId()
         gameRepository.obtainGameBy(gameId).throwIfIsOver(exception = RuntimeException())
 
         return gameId

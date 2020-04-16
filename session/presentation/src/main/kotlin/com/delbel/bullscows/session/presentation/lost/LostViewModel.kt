@@ -2,6 +2,7 @@ package com.delbel.bullscows.session.presentation.lost
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.game.domain.repository.GameRepository
@@ -21,8 +22,10 @@ internal class LostViewModel @AssistedInject constructor(
     @AssistedInject.Factory
     interface Factory : AssistedViewModelFactory<LostViewModel>
 
-    private val gameId = GameId(id = handle.get<String>("game_id")!!.toLong())
+    private val sessionId = currentSessionRepository.obtainSessionId()
+    val session = sessionRepository.obtainBy(sessionId).asLiveData()
 
+    private val gameId = GameId(id = handle.get<String>("game_id")!!.toLong())
     val game = liveData {
         val game = gameRepository.obtainGameBy(id = gameId)
         currentSessionRepository.clear()

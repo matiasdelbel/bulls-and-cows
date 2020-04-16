@@ -12,11 +12,17 @@ internal data class SessionDo(
 ) {
 
     @PrimaryKey(autoGenerate = true)
-    var id: Long = Long.MAX_VALUE
+    var id: Long = 0
 
     fun asModel() = Session(
         id = SessionId(value = id),
         guessed = guessed,
         points = points
     )
+
+    companion object {
+
+        fun createFrom(session: Session) =
+            SessionDo(session.guessed, session.points).apply { id = session.id.value }
+    }
 }

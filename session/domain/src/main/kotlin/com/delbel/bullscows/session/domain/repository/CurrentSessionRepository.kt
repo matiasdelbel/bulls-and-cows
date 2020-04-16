@@ -9,11 +9,13 @@ interface CurrentSessionRepository {
 
     fun updateGameId(gameId: GameId)
 
-    suspend fun obtainSessionIdOrCreate(creator: suspend () -> SessionId): SessionId
+    fun obtainSessionId(): SessionId
 
-    suspend fun obtainSessionIdOrThrow(exception: Exception): SessionId
-
-    suspend fun obtainGameIdOrThrow(exception: Exception): GameId
+    fun obtainGameId(): GameId
 
     fun clear()
 }
+
+class NoSessionException : RuntimeException()
+
+class NoGameException : RuntimeException()
