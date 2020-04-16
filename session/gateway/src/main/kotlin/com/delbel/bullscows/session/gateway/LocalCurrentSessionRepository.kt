@@ -24,17 +24,24 @@ internal class LocalCurrentSessionRepository @Inject constructor(
     override fun updateGameId(gameId: GameId) = update(CURRENT_GAME_ID, value = gameId.id)
 
     override suspend fun obtainSessionIdOrCreate(creator: suspend () -> SessionId): SessionId {
-        val sessionId = obtainSessionId()
-        if (sessionId.value == MIN_VALUE) update(CURRENT_SESSION_ID, value = creator().value)
+        val sessionId = obtain(key = CURRENT_SESSION_ID)
+        if (sessionId == MIN_VALUE) update(CURRENT_SESSION_ID, value = creator().value)
 
-        return obtainSessionId()
+        return SessionId(value = obtain(key = CURRENT_SESSION_ID))
     }
 
     override suspend fun obtainSessionIdOrThrow(exception: Exception): SessionId {
-        val sessionId = obtainSessionId()
-        if (sessionId.value == MIN_VALUE) throw exception
+        val sessionId = obtain(key = CURRENT_SESSION_ID)
+        if (sessionId == MIN_VALUE) throw exception
 
-        return sessionId
+        return SessionId(value = sessionId)
+    }
+
+    override suspend fun obtainGameIdOrThrow(exception: Exception): GameId {
+        val gameId = obtain(key = CURRENT_GAME_ID)
+        if (gameId == MIN_VALUE) throw exception
+
+        return GameId(id = gameId)
     }
 
     override fun clear() {
@@ -42,7 +49,7 @@ internal class LocalCurrentSessionRepository @Inject constructor(
         update(CURRENT_GAME_ID, value = MIN_VALUE)
     }
 
-    private fun obtainSessionId() = SessionId(value = preferences.getLong(CURRENT_SESSION_ID, MIN_VALUE))
+    private fun obtain(key: String) = preferences.getLong(key, MIN_VALUE)
 
     private fun update(key: String, value: Long) = preferences.edit().putLong(key, value).apply()
 }

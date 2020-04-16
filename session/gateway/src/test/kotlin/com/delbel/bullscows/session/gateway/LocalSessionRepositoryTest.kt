@@ -1,7 +1,6 @@
 package com.delbel.bullscows.session.gateway
 
 import com.delbel.bullscows.game.domain.Game
-import com.delbel.bullscows.game.domain.exception.GameNoWonException
 import com.delbel.bullscows.session.domain.Session
 import com.delbel.bullscows.session.domain.SessionId
 import com.delbel.bullscows.session.gateway.database.SessionDao
@@ -43,14 +42,6 @@ class LocalSessionRepositoryTest {
         assertThat(session).isEqualTo(expected)
     }
 
-    @Test(expected = GameNoWonException::class)
-    fun `addGameWon with game no won should throw exception`() = mainRule.runBlockingTest {
-        val game = Game(id = mock(), secret = mock(), maxAttempts = 1)
-        val dao = mock<SessionDao>()
-        val repository = LocalSessionRepository(dao)
-
-        repository.addGameWon(id = mock(), game = game)
-    }
 
     @Test
     fun `addGameWon should update points and guessed on data base`() = mainRule.runBlockingTest {

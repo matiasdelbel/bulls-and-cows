@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.session.presentation.R
 import com.delbel.bullscows.session.presentation.databinding.ScreenMenuBinding
 import dagger.android.support.AndroidSupportInjection
@@ -32,7 +33,8 @@ class MenuScreen : Fragment(R.layout.screen_menu) {
         super.onActivityCreated(savedInstanceState)
         _viewBinding = ScreenMenuBinding.bind(requireView())
 
-        viewModel.sessionState.observe(viewLifecycleOwner, Observer(::setUpContinueAction))
+        setUpContinueActionVisibility()
+        setUpContinueAction()
 
         setUpCreateAction()
         setUpBestScoresAction()
@@ -43,30 +45,26 @@ class MenuScreen : Fragment(R.layout.screen_menu) {
         _viewBinding = null
     }
 
+    private fun setUpContinueActionVisibility() {
+        viewModel.sessionState.observe(viewLifecycleOwner, Observer {
+            viewBinding.continueGame.isVisible = it !is NoSession
+        })
+    }
+
+    private fun setUpContinueAction() = viewBinding.continueGame.setOnClickListener {
+        viewModel.continueGame().observe(viewLifecycleOwner, Observer(::navigateToGameScreen))
+    }
+
     private fun setUpCreateAction() = viewBinding.newGame.setOnClickListener {
-        viewModel.create().observe(viewLifecycleOwner, Observer(::navigateToGameScreen))
+        viewModel.create().observe(viewLifecycleOwner, Observer { navigateToGameScreen(it.gameId) })
     }
 
     private fun setUpBestScoresAction() = viewBinding.bestScores.setOnClickListener {
         TODO()
     }
 
-    private fun setUpContinueAction(sessionState: SessionState) = when (sessionState) {
-        is NewSession, is RunningSession -> setUpScreenForRunningSession()
-        is NoSession -> setUpScreenForNewSession()
-    }
-
-    private fun navigateToGameScreen(newSession: NewSession) {
-        val deepLink = Uri.parse(getString(R.string.game_deep_link, newSession.gameId.id))
+    private fun navigateToGameScreen(gameId: GameId) {
+        val deepLink = Uri.parse(getString(R.string.game_deep_link, gameId.id))
         findNavController().navigate(deepLink)
-    }
-
-    private fun setUpScreenForNewSession() {
-        viewBinding.continueGame.isVisible = false
-    }
-
-    private fun setUpScreenForRunningSession() {
-        viewBinding.continueGame.isVisible = true
-        viewBinding.continueGame.setOnClickListener { TODO() }
     }
 }

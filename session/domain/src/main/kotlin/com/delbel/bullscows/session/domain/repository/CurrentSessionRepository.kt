@@ -13,5 +13,7 @@ interface CurrentSessionRepository {
 
     suspend fun obtainSessionIdOrThrow(exception: Exception): SessionId
 
+    suspend fun obtainGameIdOrThrow(exception: Exception): GameId
+
     fun clear()
 }

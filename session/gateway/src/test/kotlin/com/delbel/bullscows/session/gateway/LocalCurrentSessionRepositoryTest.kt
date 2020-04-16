@@ -78,6 +78,50 @@ class LocalCurrentSessionRepositoryTest {
         verify(preferencesEditor).apply()
     }
 
+    @Test(expected = RuntimeException::class)
+    fun `obtainSessionIdOrThrow without session id should throw`() = mainRule.runBlockingTest {
+        val preferences = mock<SharedPreferences> {
+            on { getLong("CURRENT_SESSION_ID", MIN_VALUE) } doReturn MIN_VALUE
+        }
+        val repository = LocalCurrentSessionRepository(preferences)
+
+        repository.obtainSessionIdOrThrow(exception = RuntimeException())
+    }
+
+    @Test
+    fun `obtainSessionIdOrThrow with session id should return it`() = mainRule.runBlockingTest {
+        val preferences = mock<SharedPreferences> {
+            on { getLong("CURRENT_SESSION_ID", MIN_VALUE) } doReturn 123
+        }
+        val repository = LocalCurrentSessionRepository(preferences)
+
+        val sessionId = repository.obtainSessionIdOrThrow(exception = RuntimeException())
+
+        assertThat(sessionId).isEqualTo(SessionId(value = 123))
+    }
+
+    @Test(expected = RuntimeException::class)
+    fun `obtainGameIdOrThrow without session id should throw`() = mainRule.runBlockingTest {
+        val preferences = mock<SharedPreferences> {
+            on { getLong("CURRENT_GAME_ID", MIN_VALUE) } doReturn MIN_VALUE
+        }
+        val repository = LocalCurrentSessionRepository(preferences)
+
+        repository.obtainGameIdOrThrow(exception = RuntimeException())
+    }
+
+    @Test
+    fun `obtainGameIdOrThrow with session id should return it`() = mainRule.runBlockingTest {
+        val preferences = mock<SharedPreferences> {
+            on { getLong("CURRENT_GAME_ID", MIN_VALUE) } doReturn 123
+        }
+        val repository = LocalCurrentSessionRepository(preferences)
+
+        val gameId = repository.obtainGameIdOrThrow(exception = RuntimeException())
+
+        assertThat(gameId).isEqualTo(GameId(id = 123))
+    }
+
     @Test
     fun `clear should clear current session and game id`() {
         val preferencesEditor = mock<SharedPreferences.Editor> {
