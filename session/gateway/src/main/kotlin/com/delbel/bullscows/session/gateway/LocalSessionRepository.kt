@@ -26,8 +26,6 @@ internal class LocalSessionRepository @Inject constructor(
     }
 
     override suspend fun addGameWon(id: SessionId, game: Game) {
-        game.executeIfHasNotWon { throw  GameNoWonException() }
-
         val session = obtainBy(id = id)
         val points = game.points()
 

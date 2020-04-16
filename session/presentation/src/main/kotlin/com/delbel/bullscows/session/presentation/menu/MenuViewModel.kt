@@ -1,6 +1,7 @@
 package com.delbel.bullscows.session.presentation.menu
 
 import androidx.lifecycle.*
+import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.game.domain.repository.GameRepository
 import com.delbel.bullscows.session.domain.repository.CurrentSessionRepository
 import com.delbel.bullscows.session.domain.repository.SessionRepository
@@ -32,5 +33,25 @@ internal class MenuViewModel @Inject constructor(
         currentSessionRepository.register(sessionId, gameId)
 
         emit(value = NewSession(sessionId, gameId))
+    }
+
+    fun continueGame() = liveData {
+        runCatching { currentGameId() }
+            .onSuccess { emit(value = it) }
+            .onFailure { emit(value = createGameAndSaveItOnSession()) }
+    }
+
+    private suspend fun currentGameId(): GameId {
+        val gameId = currentSessionRepository.obtainGameIdOrThrow(exception = RuntimeException())
+        gameRepository.obtainGameBy(gameId).throwIfIsOver(exception = RuntimeException())
+
+        return gameId
+    }
+
+    private suspend fun createGameAndSaveItOnSession(): GameId {
+        val gameId = gameRepository.create()
+        currentSessionRepository.updateGameId(gameId)
+
+        return gameId
     }
 }

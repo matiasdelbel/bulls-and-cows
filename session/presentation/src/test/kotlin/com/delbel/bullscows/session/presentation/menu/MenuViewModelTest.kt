@@ -2,6 +2,7 @@ package com.delbel.bullscows.session.presentation.menu
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.delbel.bullscows.game.domain.Game
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.game.domain.repository.GameRepository
 import com.delbel.bullscows.session.domain.SessionId
@@ -24,10 +25,10 @@ class MenuViewModelTest {
 
     @Test
     fun `init with running session should notify it`() = coroutineRule.runBlockingTest {
-        val sessionIdRepository = mock<CurrentSessionRepository> {
+        val currentSessionRepository = mock<CurrentSessionRepository> {
             onBlocking { obtainSessionIdOrThrow(any()) } doReturn mock()
         }
-        val viewModel = MenuViewModel(sessionIdRepository, mock(), mock())
+        val viewModel = MenuViewModel(currentSessionRepository, mock(), mock())
         val observer = mock<Observer<SessionState>>()
 
         viewModel.sessionState.observeForever(observer)
@@ -40,10 +41,10 @@ class MenuViewModelTest {
 
     @Test
     fun `init without session should create a one and notify`() = coroutineRule.runBlockingTest {
-        val sessionIdRepository = mock<CurrentSessionRepository> {
+        val currentSessionRepository = mock<CurrentSessionRepository> {
             onBlocking { obtainSessionIdOrThrow(any()) } doThrow RuntimeException()
         }
-        val viewModel = MenuViewModel(sessionIdRepository, mock(), mock())
+        val viewModel = MenuViewModel(currentSessionRepository, mock(), mock())
         val observer = mock<Observer<SessionState>>()
 
         viewModel.sessionState.observeForever(observer)
@@ -56,7 +57,7 @@ class MenuViewModelTest {
 
     @Test
     fun `create should create a session and notify`() = coroutineRule.runBlockingTest {
-        val sessionIdRepository = mock<CurrentSessionRepository> {
+        val currentSessionRepository = mock<CurrentSessionRepository> {
             onBlocking { obtainSessionIdOrThrow(any()) } doReturn mock()
         }
         val sessionId = mock<SessionId>()
@@ -65,7 +66,7 @@ class MenuViewModelTest {
         }
         val gameId = mock<GameId>()
         val gameRepository = mock<GameRepository> { onBlocking { create() } doReturn gameId }
-        val viewModel = MenuViewModel(sessionIdRepository, sessionRepository, gameRepository)
+        val viewModel = MenuViewModel(currentSessionRepository, sessionRepository, gameRepository)
         val observer = mock<Observer<SessionState>>()
 
         viewModel.create().observeForever(observer)
@@ -74,6 +75,69 @@ class MenuViewModelTest {
             verify(observer).onChanged(capture())
             assertThat(firstValue).isEqualTo(NewSession(sessionId, gameId))
         }
-        verify(sessionIdRepository).register(sessionId, gameId)
+        verify(currentSessionRepository).register(sessionId, gameId)
+    }
+
+    @Test
+    fun `continueGame should return current game id`() = coroutineRule.runBlockingTest {
+        val gameId = mock<GameId>()
+        val currentSessionRepository = mock<CurrentSessionRepository> {
+            onBlocking { obtainGameIdOrThrow(any()) } doReturn gameId
+        }
+        val gameRepository = mock<GameRepository> {
+            onBlocking { obtainGameBy(gameId) } doReturn mock()
+        }
+        val viewModel = MenuViewModel(currentSessionRepository, mock(), gameRepository)
+        val observer = mock<Observer<GameId>>()
+
+        viewModel.continueGame().observeForever(observer)
+
+        argumentCaptor<GameId> {
+            verify(observer).onChanged(capture())
+            assertThat(firstValue).isEqualTo(gameId)
+        }
+    }
+
+    @Test
+    fun `continueGame without game should return new game id`() = coroutineRule.runBlockingTest {
+        val currentSessionRepository = mock<CurrentSessionRepository> {
+            onBlocking { obtainGameIdOrThrow(any()) } doThrow RuntimeException()
+        }
+        val newGameId = mock<GameId>()
+        val gameRepository = mock<GameRepository> { onBlocking { create() } doReturn newGameId }
+        val viewModel = MenuViewModel(currentSessionRepository, mock(), gameRepository)
+        val observer = mock<Observer<GameId>>()
+
+        viewModel.continueGame().observeForever(observer)
+
+        argumentCaptor<GameId> {
+            verify(observer).onChanged(capture())
+            assertThat(firstValue).isEqualTo(newGameId)
+        }
+        verify(currentSessionRepository).updateGameId(newGameId)
+    }
+
+    @Test
+    fun `continueGame with game over should return new game id`() = coroutineRule.runBlockingTest {
+        val gameId = mock<GameId>()
+        val currentSessionRepository = mock<CurrentSessionRepository> {
+            onBlocking { obtainGameIdOrThrow(any()) } doReturn gameId
+        }
+        val game = mock<Game>{ on { throwIfIsOver(any()) } doThrow RuntimeException() }
+        val newGameId = mock<GameId>()
+        val gameRepository = mock<GameRepository> {
+            onBlocking { obtainGameBy(gameId) } doReturn game
+            onBlocking { create() } doReturn newGameId
+        }
+        val viewModel = MenuViewModel(currentSessionRepository, mock(), gameRepository)
+        val observer = mock<Observer<GameId>>()
+
+        viewModel.continueGame().observeForever(observer)
+
+        argumentCaptor<GameId> {
+            verify(observer).onChanged(capture())
+            assertThat(firstValue).isEqualTo(newGameId)
+        }
+        verify(currentSessionRepository).updateGameId(newGameId)
     }
 }

@@ -4,6 +4,7 @@ import com.delbel.bullscows.game.domain.core.Answer
 import com.delbel.bullscows.game.domain.core.Guess
 import com.delbel.bullscows.game.domain.core.Secret
 import com.delbel.bullscows.game.domain.exception.GameNoStartedException
+import com.delbel.bullscows.game.domain.exception.GameNoWonException
 import java.lang.Long.MAX_VALUE
 
 data class Game(
@@ -22,13 +23,22 @@ data class Game(
         return next
     }
 
-    fun executeIfHasNotWon(block: () -> Unit) =
-        current?.executeIf(lost = block, inProgress = block) ?: block()
+    fun points(): Int {
+        checkIfIsWinningShift()
 
-    fun points() = current?.points() ?: throw GameNoStartedException()
+        return current?.points() ?: throw GameNoStartedException()
+    }
+
+    fun throwIfIsOver(exception: Exception) =
+        current?.executeIf(lost = { throw exception }, won = { throw exception })
 
     private fun nextShift(guess: Guess, answer: Answer) = current?.next(guess, answer)
         ?: Shift(answer = answer, guess = guess, maxAttempts = maxAttempts)
+
+    private fun checkIfIsWinningShift() = current?.executeIf(
+        lost = { throw GameNoWonException() },
+        inProgress = { throw GameNoWonException() }
+    )
 }
 
 inline class GameId(val id: Long = MAX_VALUE)
