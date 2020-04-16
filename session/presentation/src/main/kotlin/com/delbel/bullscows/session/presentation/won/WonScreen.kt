@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.session.presentation.R
@@ -48,6 +49,8 @@ class WonScreen : Fragment(R.layout.screen_won) {
 
     private fun navigateToGameScreen(gameId: GameId) {
         val deepLink = Uri.parse(getString(R.string.game_deep_link, gameId.id))
-        findNavController().navigate(deepLink)
+        val options = NavOptions.Builder().setPopUpTo(R.id.session_graph, true).build()
+
+        findNavController().navigate(deepLink, options)
     }
 }
