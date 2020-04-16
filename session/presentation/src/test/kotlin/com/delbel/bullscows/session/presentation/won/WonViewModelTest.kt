@@ -7,7 +7,7 @@ import com.delbel.bullscows.game.domain.Game
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.game.domain.repository.GameRepository
 import com.delbel.bullscows.session.domain.SessionId
-import com.delbel.bullscows.session.domain.repository.SessionIdRepository
+import com.delbel.bullscows.session.domain.repository.CurrentSessionRepository
 import com.delbel.bullscows.session.domain.repository.SessionRepository
 import com.delbel.bullscows.session.presentation.MainCoroutineRule
 import com.google.common.truth.Truth.assertThat
@@ -29,8 +29,8 @@ class WonViewModelTest {
     @Test
     fun `game should obtain id and post it`() = coroutineRule.runBlockingTest {
         val savedState = mock<SavedStateHandle> { on { get<String>("game_id") } doReturn "123" }
-        val sessionIdRepository = mock<SessionIdRepository> {
-            onBlocking { obtainCurrentOrCreate(creator = any()) } doReturn SessionId(value = 45)
+        val sessionIdRepository = mock<CurrentSessionRepository> {
+            onBlocking { obtainSessionIdOrCreate(creator = any()) } doReturn SessionId(value = 45)
         }
         val sessionRepository = mock<SessionRepository>()
         val game = mock<Game>()

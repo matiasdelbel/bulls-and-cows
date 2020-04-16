@@ -5,7 +5,7 @@ import androidx.lifecycle.Observer
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.game.domain.repository.GameRepository
 import com.delbel.bullscows.session.domain.SessionId
-import com.delbel.bullscows.session.domain.repository.SessionIdRepository
+import com.delbel.bullscows.session.domain.repository.CurrentSessionRepository
 import com.delbel.bullscows.session.domain.repository.SessionRepository
 import com.delbel.bullscows.session.presentation.MainCoroutineRule
 import com.google.common.truth.Truth.assertThat
@@ -24,8 +24,8 @@ class MenuViewModelTest {
 
     @Test
     fun `init with running session should notify it`() = coroutineRule.runBlockingTest {
-        val sessionIdRepository = mock<SessionIdRepository> {
-            onBlocking { obtainCurrentOrThrow(any()) } doReturn mock()
+        val sessionIdRepository = mock<CurrentSessionRepository> {
+            onBlocking { obtainSessionIdOrThrow(any()) } doReturn mock()
         }
         val viewModel = MenuViewModel(sessionIdRepository, mock(), mock())
         val observer = mock<Observer<SessionState>>()
@@ -40,8 +40,8 @@ class MenuViewModelTest {
 
     @Test
     fun `init without session should create a one and notify`() = coroutineRule.runBlockingTest {
-        val sessionIdRepository = mock<SessionIdRepository> {
-            onBlocking { obtainCurrentOrThrow(any()) } doThrow RuntimeException()
+        val sessionIdRepository = mock<CurrentSessionRepository> {
+            onBlocking { obtainSessionIdOrThrow(any()) } doThrow RuntimeException()
         }
         val viewModel = MenuViewModel(sessionIdRepository, mock(), mock())
         val observer = mock<Observer<SessionState>>()
@@ -56,8 +56,8 @@ class MenuViewModelTest {
 
     @Test
     fun `create should create a session and notify`() = coroutineRule.runBlockingTest {
-        val sessionIdRepository = mock<SessionIdRepository> {
-            onBlocking { obtainCurrentOrThrow(any()) } doReturn mock()
+        val sessionIdRepository = mock<CurrentSessionRepository> {
+            onBlocking { obtainSessionIdOrThrow(any()) } doReturn mock()
         }
         val sessionId = mock<SessionId>()
         val sessionRepository = mock<SessionRepository> {
@@ -74,6 +74,6 @@ class MenuViewModelTest {
             verify(observer).onChanged(capture())
             assertThat(firstValue).isEqualTo(NewSession(sessionId, gameId))
         }
-        verify(sessionIdRepository).registerCurrent(sessionId)
+        verify(sessionIdRepository).register(sessionId, gameId)
     }
 }

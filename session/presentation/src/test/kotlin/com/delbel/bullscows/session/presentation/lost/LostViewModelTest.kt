@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.delbel.bullscows.game.domain.Game
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.game.domain.repository.GameRepository
-import com.delbel.bullscows.session.domain.repository.SessionIdRepository
+import com.delbel.bullscows.session.domain.repository.CurrentSessionRepository
 import com.delbel.bullscows.session.presentation.MainCoroutineRule
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.argumentCaptor
@@ -30,7 +30,7 @@ class LostViewModelTest {
     @Test
     fun `game should obtain id and post it`() = coroutineRule.runBlockingTest {
         val savedState = mock<SavedStateHandle> { on { get<String>("game_id") } doReturn "123" }
-        val sessionIdRepository = mock<SessionIdRepository>()
+        val sessionIdRepository = mock<CurrentSessionRepository>()
         val game = mock<Game>()
         val gameRepository = mock<GameRepository> {
             onBlocking { obtainGameBy(id = GameId(id = 123)) } doReturn game
@@ -44,6 +44,6 @@ class LostViewModelTest {
             verify(observer).onChanged(capture())
             assertThat(firstValue).isEqualTo(game)
         }
-        verify(sessionIdRepository).removeCurrent()
+        verify(sessionIdRepository).removeSessionId()
     }
 }

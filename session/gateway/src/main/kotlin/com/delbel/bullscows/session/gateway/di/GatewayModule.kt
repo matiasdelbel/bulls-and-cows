@@ -1,8 +1,8 @@
 package com.delbel.bullscows.session.gateway.di
 
-import com.delbel.bullscows.session.domain.repository.SessionIdRepository
+import com.delbel.bullscows.session.domain.repository.CurrentSessionRepository
 import com.delbel.bullscows.session.domain.repository.SessionRepository
-import com.delbel.bullscows.session.gateway.LocalSessionIdRepository
+import com.delbel.bullscows.session.gateway.LocalCurrentSessionRepository
 import com.delbel.bullscows.session.gateway.LocalSessionRepository
 import dagger.Binds
 import dagger.Module
@@ -14,5 +14,5 @@ abstract class GatewayModule {
     internal abstract fun bindRepository(repository: LocalSessionRepository): SessionRepository
 
     @Binds
-    internal abstract fun bindSessionIdRepository(repository: LocalSessionIdRepository): SessionIdRepository
+    internal abstract fun bindCurrentSessionRepository(repository: LocalCurrentSessionRepository): CurrentSessionRepository
 }
