@@ -79,16 +79,17 @@ class LocalCurrentSessionRepositoryTest {
     }
 
     @Test
-    fun `removeSessionId should save the new id on preferences`() {
+    fun `clear should clear current session and game id`() {
         val preferencesEditor = mock<SharedPreferences.Editor> {
             on { putLong(any(), any()) } doReturn mock
         }
         val preferences = mock<SharedPreferences> { on { edit() } doReturn preferencesEditor }
         val repository = LocalCurrentSessionRepository(preferences)
 
-        repository.removeSessionId()
+        repository.clear()
 
         verify(preferencesEditor).putLong("CURRENT_SESSION_ID", MIN_VALUE)
-        verify(preferencesEditor).apply()
+        verify(preferencesEditor).putLong("CURRENT_GAME_ID", MIN_VALUE)
+        verify(preferencesEditor, times(2)).apply()
     }
 }

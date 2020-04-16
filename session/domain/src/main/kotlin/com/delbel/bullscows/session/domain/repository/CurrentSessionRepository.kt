@@ -13,5 +13,5 @@ interface CurrentSessionRepository {
 
     suspend fun obtainSessionIdOrThrow(exception: Exception): SessionId
 
-    fun removeSessionId()
+    fun clear()
 }

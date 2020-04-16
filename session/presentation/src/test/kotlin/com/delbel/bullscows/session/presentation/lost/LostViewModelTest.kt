@@ -6,7 +6,9 @@ import androidx.lifecycle.SavedStateHandle
 import com.delbel.bullscows.game.domain.Game
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.game.domain.repository.GameRepository
+import com.delbel.bullscows.session.domain.SessionId
 import com.delbel.bullscows.session.domain.repository.CurrentSessionRepository
+import com.delbel.bullscows.session.domain.repository.SessionRepository
 import com.delbel.bullscows.session.presentation.MainCoroutineRule
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.argumentCaptor
@@ -30,12 +32,12 @@ class LostViewModelTest {
     @Test
     fun `game should obtain id and post it`() = coroutineRule.runBlockingTest {
         val savedState = mock<SavedStateHandle> { on { get<String>("game_id") } doReturn "123" }
-        val sessionIdRepository = mock<CurrentSessionRepository>()
+        val currentSessionRepository = mock<CurrentSessionRepository>()
         val game = mock<Game>()
         val gameRepository = mock<GameRepository> {
             onBlocking { obtainGameBy(id = GameId(id = 123)) } doReturn game
         }
-        val viewModel = LostViewModel(savedState, sessionIdRepository, gameRepository)
+        val viewModel = LostViewModel(savedState, currentSessionRepository, mock(), gameRepository)
         val observer = mock<Observer<Game>>()
 
         viewModel.game.observeForever(observer)
@@ -44,6 +46,31 @@ class LostViewModelTest {
             verify(observer).onChanged(capture())
             assertThat(firstValue).isEqualTo(game)
         }
-        verify(sessionIdRepository).removeSessionId()
+        verify(currentSessionRepository).clear()
+    }
+
+    @Test
+    fun `createSession should create it and notify current game`() = coroutineRule.runBlockingTest {
+        val savedState = mock<SavedStateHandle> { on { get<String>("game_id") } doReturn "123" }
+        val currentSessionRepository = mock<CurrentSessionRepository>()
+        val sessionId = mock<SessionId>()
+        val sessionRepository = mock<SessionRepository> {
+            onBlocking { create() } doReturn sessionId
+        }
+        val gameId = mock<GameId>()
+        val gameRepository = mock<GameRepository> {
+            onBlocking { obtainGameBy(id = GameId(id = 123)) } doReturn mock()
+            onBlocking { create() } doReturn gameId
+        }
+        val viewModel = LostViewModel(savedState, currentSessionRepository, sessionRepository, gameRepository)
+        val observer = mock<Observer<GameId>>()
+
+        viewModel.createSession().observeForever(observer)
+
+        argumentCaptor<GameId> {
+            verify(observer).onChanged(capture())
+            assertThat(firstValue).isEqualTo(gameId)
+        }
+        verify(currentSessionRepository).register(sessionId, gameId)
     }
 }

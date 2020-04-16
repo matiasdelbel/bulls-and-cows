@@ -5,7 +5,8 @@
 
     <string name="secret">The secret was %1$s.</string>
 
-    <string name="next">Continue</string>
+    <string name="continue_game_won">Continue</string>
+    <string name="continue_game_lost">Start Again</string>
 
     <string name="new_game">New Game</string>
     <string name="continue_game">Continue</string>

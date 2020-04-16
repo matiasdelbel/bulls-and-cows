@@ -37,7 +37,10 @@ internal class LocalCurrentSessionRepository @Inject constructor(
         return sessionId
     }
 
-    override fun removeSessionId() = update(CURRENT_SESSION_ID, MIN_VALUE)
+    override fun clear() {
+        update(CURRENT_SESSION_ID, value = MIN_VALUE)
+        update(CURRENT_GAME_ID, value = MIN_VALUE)
+    }
 
     private fun obtainSessionId() = SessionId(value = preferences.getLong(CURRENT_SESSION_ID, MIN_VALUE))
 
