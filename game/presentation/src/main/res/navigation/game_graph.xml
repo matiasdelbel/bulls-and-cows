@@ -10,6 +10,7 @@
 
     <fragment
         android:id="@+id/screen_game"
+        android:label=" "
         android:name="com.delbel.bullscows.game.presentation.core.GameScreen"
         tools:layout="@layout/game_screen_board" />
 

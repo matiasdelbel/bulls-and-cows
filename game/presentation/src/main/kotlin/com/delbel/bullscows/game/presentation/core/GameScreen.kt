@@ -3,7 +3,6 @@ package com.delbel.bullscows.game.presentation.core
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
@@ -49,7 +48,6 @@ class GameScreen : Fragment(R.layout.game_screen_board) {
     }
 
     private fun setUpViewInitialState() {
-        (activity as? AppCompatActivity)?.setSupportActionBar(viewBinding.toolbar)
         viewBinding.shifts.adapter = adapter
 
         val header = viewBinding.header

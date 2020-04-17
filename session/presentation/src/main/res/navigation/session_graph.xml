@@ -9,11 +9,13 @@
     <fragment
         android:id="@+id/screen_menu"
         android:name="com.delbel.bullscows.session.presentation.menu.MenuScreen"
+        android:label="@string/menu_title"
         tools:layout="@layout/screen_menu" />
 
     <fragment
         android:id="@+id/screen_won"
         android:name="com.delbel.bullscows.session.presentation.won.WonScreen"
+        android:label=" "
         tools:layout="@layout/screen_won">
 
         <deepLink app:uri="bulls-cows://session/won?gameId={game_id}" />
@@ -23,6 +25,7 @@
     <fragment
         android:id="@+id/screen_lost"
         android:name="com.delbel.bullscows.session.presentation.lost.LostScreen"
+        android:label=" "
         tools:layout="@layout/screen_lost">
 
         <deepLink app:uri="bulls-cows://session/lost?gameId={game_id}" />
