@@ -8,7 +8,6 @@ import com.delbel.bullscows.game.gateway.model.GameDo.SecretDo
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.Test
-import java.lang.Long.MAX_VALUE
 
 class GameDoTest {
 
@@ -21,7 +20,7 @@ class GameDoTest {
 
         val gameDo = GameDo.createFrom(game)
 
-        assertThat(gameDo.id).isEqualTo(MAX_VALUE)
+        assertThat(gameDo.id).isEqualTo(0)
         assertThat(gameDo.secret).isEqualTo(SecretDo(first = 1, second = 2, third = 3, fourth = 4))
         assertThat(gameDo.maxAttempts).isEqualTo(7)
     }
@@ -30,8 +29,9 @@ class GameDoTest {
     fun `asModel should create a new instance of the business object`() {
         val shift = mock<Shift>()
         val gameDo = GameDo(maxAttempts = 3, secret = SecretDo(first = 1, second = 2, third = 3, fourth = 4))
+            .also { it.id = 123 }
         val expectedGame = Game(
-            id = GameId(id = Long.MAX_VALUE),
+            id = GameId(id = 123),
             secret = Secret(first = 1, second = 2, third = 3, fourth = 4),
             maxAttempts = 3,
             current = shift

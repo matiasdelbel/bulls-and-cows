@@ -12,7 +12,7 @@ import com.delbel.bullscows.game.domain.core.Secret
 internal data class GameDo(val maxAttempts: Int, @Embedded val secret: SecretDo) {
 
     @PrimaryKey(autoGenerate = true)
-    var id: Long = Long.MAX_VALUE
+    var id: Long = 0
 
     fun asModel(currentShift: Shift?) = Game(
         id = GameId(id),

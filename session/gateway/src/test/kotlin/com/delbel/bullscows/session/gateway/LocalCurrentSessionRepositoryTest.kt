@@ -3,6 +3,8 @@ package com.delbel.bullscows.session.gateway
 import android.content.SharedPreferences
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.session.domain.SessionId
+import com.delbel.bullscows.session.domain.repository.NoGameException
+import com.delbel.bullscows.session.domain.repository.NoSessionException
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.*
 import kotlinx.coroutines.test.runBlockingTest
@@ -47,77 +49,46 @@ class LocalCurrentSessionRepositoryTest {
         verify(preferencesEditor).apply()
     }
 
-    @Test
-    fun `obtainSessionIdOrCreate should return current session id`() = mainRule.runBlockingTest {
-        val preferences = mock<SharedPreferences> {
-            on { getLong("CURRENT_SESSION_ID", MIN_VALUE) } doReturn 123
-        }
-        val repository = LocalCurrentSessionRepository(preferences)
-
-        val sessionId = repository.obtainSessionIdOrCreate { throw Exception() }
-
-        assertThat(sessionId).isEqualTo(SessionId(value = 123))
-    }
-
-    @Test
-    fun `obtainSessionIdOrCreate without current should obtain it from creator`() = mainRule.runBlockingTest {
-        val preferencesEditor = mock<SharedPreferences.Editor> {
-            on { putLong(any(), any()) } doReturn mock
-        }
-        val preferences = mock<SharedPreferences> {
-            on { getLong("CURRENT_SESSION_ID", MIN_VALUE) } doReturn MIN_VALUE doReturn 123
-            on { edit() } doReturn preferencesEditor
-        }
-        val sessionIdFromCreator = SessionId(value = 123)
-        val repository = LocalCurrentSessionRepository(preferences)
-
-        val sessionId = repository.obtainSessionIdOrCreate { sessionIdFromCreator }
-
-        assertThat(sessionId).isEqualTo(sessionIdFromCreator)
-        verify(preferencesEditor).putLong("CURRENT_SESSION_ID", 123)
-        verify(preferencesEditor).apply()
-    }
-
-    @Test(expected = RuntimeException::class)
-    fun `obtainSessionIdOrThrow without session id should throw`() = mainRule.runBlockingTest {
+    @Test(expected = NoSessionException::class)
+    fun `obtainSessionId without session id should throw`() = mainRule.runBlockingTest {
         val preferences = mock<SharedPreferences> {
             on { getLong("CURRENT_SESSION_ID", MIN_VALUE) } doReturn MIN_VALUE
         }
         val repository = LocalCurrentSessionRepository(preferences)
 
-        repository.obtainSessionIdOrThrow(exception = RuntimeException())
+        repository.obtainSessionId()
     }
 
     @Test
-    fun `obtainSessionIdOrThrow with session id should return it`() = mainRule.runBlockingTest {
+    fun `obtainSessionId with session id should return it`() = mainRule.runBlockingTest {
         val preferences = mock<SharedPreferences> {
             on { getLong("CURRENT_SESSION_ID", MIN_VALUE) } doReturn 123
         }
         val repository = LocalCurrentSessionRepository(preferences)
 
-        val sessionId = repository.obtainSessionIdOrThrow(exception = RuntimeException())
+        val sessionId = repository.obtainSessionId()
 
         assertThat(sessionId).isEqualTo(SessionId(value = 123))
     }
 
-    @Test(expected = RuntimeException::class)
-    fun `obtainGameIdOrThrow without session id should throw`() = mainRule.runBlockingTest {
+    @Test(expected = NoGameException::class)
+    fun `obtainGameId without game id should throw`() = mainRule.runBlockingTest {
         val preferences = mock<SharedPreferences> {
             on { getLong("CURRENT_GAME_ID", MIN_VALUE) } doReturn MIN_VALUE
         }
         val repository = LocalCurrentSessionRepository(preferences)
 
-        repository.obtainGameIdOrThrow(exception = RuntimeException())
+        repository.obtainGameId()
     }
 
     @Test
-    fun `obtainGameIdOrThrow with session id should return it`() = mainRule.runBlockingTest {
+    fun `obtainGameId with game id should return it`() = mainRule.runBlockingTest {
         val preferences = mock<SharedPreferences> {
             on { getLong("CURRENT_GAME_ID", MIN_VALUE) } doReturn 123
         }
         val repository = LocalCurrentSessionRepository(preferences)
 
-        val gameId = repository.obtainGameIdOrThrow(exception = RuntimeException())
+        val gameId = repository.obtainGameId()
 
         assertThat(gameId).isEqualTo(GameId(id = 123))
     }

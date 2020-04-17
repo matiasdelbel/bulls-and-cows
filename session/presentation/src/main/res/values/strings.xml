@@ -5,6 +5,9 @@
 
     <string name="secret">The secret was %1$s.</string>
 
+    <string name="points_on_won">You have %1$d points for %2$d guesses.</string>
+    <string name="points_on_lost">You obtained %1$d points for %2$d guesses.</string>
+
     <string name="continue_game_won">Continue</string>
     <string name="continue_game_lost">Start Again</string>
 

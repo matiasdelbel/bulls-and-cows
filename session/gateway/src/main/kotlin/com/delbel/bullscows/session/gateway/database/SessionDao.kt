@@ -4,17 +4,19 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
+import androidx.room.Update
 import com.delbel.bullscows.session.gateway.model.SessionDo
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface SessionDao {
 
+    @Query("SELECT * from session WHERE id = :sessionId")
+    fun obtainBy(sessionId: Long): Flow<SessionDo>
+
     @Insert(onConflict = REPLACE)
     suspend fun insert(session: SessionDo): Long
 
-    @Query("SELECT * from session WHERE id = :sessionId")
-    suspend fun obtainBy(sessionId: Long): SessionDo
-
-    @Query("UPDATE session SET guessed = :guessed AND points = :points WHERE id = :sessionId")
-    suspend fun update(sessionId: Long, guessed: Int, points: Int)
+    @Update
+    suspend fun update(session: SessionDo)
 }
