@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="menu_title">Bulls &amp; Cows</string>
+
     <string name="you_guessed">Guessed!</string>
     <string name="you_lost">Game Over!</string>
 

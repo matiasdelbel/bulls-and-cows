@@ -33,6 +33,7 @@ dependencies {
 
     implementation presentation.appcompat
     implementation presentation.material
+    implementation presentation.constraintLayout
 
     implementation gateway.room
 }
