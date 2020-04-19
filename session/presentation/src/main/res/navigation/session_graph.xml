@@ -10,7 +10,19 @@
         android:id="@+id/screen_menu"
         android:name="com.delbel.bullscows.session.presentation.menu.MenuScreen"
         android:label="@string/menu_title"
-        tools:layout="@layout/screen_menu" />
+        tools:layout="@layout/screen_menu">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/screen_best_scores"
+        android:name="com.delbel.bullscows.session.presentation.best.BestScoreScreen"
+        android:label="@string/best_scores"
+        tools:layout="@layout/screen_best_scores">
+
+        <deepLink app:uri="@string/best_score_deep_link" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/screen_won"

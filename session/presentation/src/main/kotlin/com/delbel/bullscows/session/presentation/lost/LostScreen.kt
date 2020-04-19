@@ -31,7 +31,8 @@ class LostScreen : Fragment(R.layout.screen_lost) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         _viewBinding = ScreenLostBinding.bind(requireView())
-        setUpCContinueAction()
+        setUpContinueAction()
+        setUpBestScoresAction()
 
         viewModel.session.observe(viewLifecycleOwner, Observer {
             viewBinding.points.text = getString(R.string.points_on_lost, it.points, it.guessed)
@@ -47,8 +48,13 @@ class LostScreen : Fragment(R.layout.screen_lost) {
         _viewBinding = null
     }
 
-    private fun setUpCContinueAction() = viewBinding.next.setOnClickListener {
+    private fun setUpContinueAction() = viewBinding.next.setOnClickListener {
         viewModel.createSession().observe(viewLifecycleOwner, Observer(::navigateToGameScreen))
+    }
+
+    private fun setUpBestScoresAction() = viewBinding.bestScores.setOnClickListener {
+        val deepLink = Uri.parse(getString(R.string.best_score_deep_link))
+        findNavController().navigate(deepLink)
     }
 
     private fun navigateToGameScreen(gameId: GameId) {

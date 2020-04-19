@@ -14,6 +14,9 @@ internal interface SessionDao {
     @Query("SELECT * from session WHERE id = :sessionId")
     fun obtainBy(sessionId: Long): Flow<SessionDo>
 
+    @Query("SELECT * from session ORDER BY points DESC LIMIT 10")
+    fun obtainAll(): Flow<List<SessionDo>>
+
     @Insert(onConflict = REPLACE)
     suspend fun insert(session: SessionDo): Long
 
