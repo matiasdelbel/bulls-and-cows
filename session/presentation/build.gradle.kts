@@ -9,6 +9,8 @@ plugins {
 
 android { viewBinding { isEnabled = true } }
 
+coverage { excludes("**/di/**", "**/*Screen*") }
+
 dependencies {
     implementation(project(path = ":session:domain"))
     implementation(project(path = ":game:domain"))

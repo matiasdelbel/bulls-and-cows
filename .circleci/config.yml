@@ -23,49 +23,8 @@ jobs:
           key: jars-{{ checksum "build.gradle.kts" }}-{{ checksum  "app/build.gradle.kts" }}
 
       - run:
-          name: Run Game Domain Module Unit Tests
-          command: ./gradlew :game:domain:testDebugUnitTest
-      - store_artifacts:
-          path: game/domain/build/reports
-      - store_test_results:
-          path: game/domain/build/test-results
-
+          name: Run Test with Coverage
+          command:  ./gradlew build && ./gradlew jacocoDebugReport
       - run:
-          name: Run Game Gateway Module Unit Tests
-          command: ./gradlew :game:gateway:testDebugUnitTest
-      - store_artifacts:
-          path: game/gateway/build/reports
-      - store_test_results:
-          path: game/gateway/build/test-results
-
-      - run:
-          name: Run Game Presentation Module Unit Tests
-          command: ./gradlew :game:presentation:testDebugUnitTest
-      - store_artifacts:
-          path: game/presentation/build/reports
-      - store_test_results:
-          path: game/presentation/build/test-results
-
-      - run:
-          name: Run Session Domain Module Unit Tests
-          command: ./gradlew :session:domain:testDebugUnitTest
-      - store_artifacts:
-          path: session/domain/build/reports
-      - store_test_results:
-          path: session/domain/build/test-results
-
-      - run:
-          name: Run Session Gateway Module Unit Tests
-          command: ./gradlew :session:gateway:testDebugUnitTest
-      - store_artifacts:
-          path: session/gateway/build/reports
-      - store_test_results:
-          path: session/gateway/build/test-results
-
-      - run:
-          name: Run Session Presentation Module Unit Tests
-          command: ./gradlew :session:presentation:testDebugUnitTest
-      - store_artifacts:
-          path: session/presentation/build/reports
-      - store_test_results:
-          path: session/presentation/build/test-results
+          name: Upload Coverage Results
+          command: bash <(curl -s https://codecov.io/bash)
