@@ -1,12 +1,14 @@
 import deps.Core
-import deps.Injection
 import deps.Gateway
+import deps.Injection
 import deps.UnitTest
 
 plugins {
     id("com.android.library")
     id("project-module-plugin")
 }
+
+coverage { excludes("**/di/**", "**/database/**") }
 
 dependencies {
     implementation(project(path = ":game:domain"))
@@ -20,4 +22,4 @@ dependencies {
     kapt(Gateway.roomCompiler)
 
     add("testImplementation", UnitTest.coroutines)
-} 
+}

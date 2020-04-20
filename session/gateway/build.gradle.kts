@@ -8,6 +8,8 @@ plugins {
     id("project-module-plugin")
 }
 
+coverage { excludes("**/di/**", "**/database/**") }
+
 dependencies {
     implementation(project(path = ":session:domain"))
     implementation(project(path = ":game:domain"))

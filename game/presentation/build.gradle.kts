@@ -1,5 +1,5 @@
-import deps.Injection
 import deps.Core
+import deps.Injection
 import deps.Presentation
 import deps.UnitTest
 
@@ -9,6 +9,10 @@ plugins {
 }
 
 android { viewBinding { isEnabled = true } }
+
+coverage {
+    excludes("**/di/**", "**/*Screen*", "**/ShiftAdapter*", "**/*ViewHolder*")
+}
 
 dependencies {
     implementation(project(path = ":game:domain"))
