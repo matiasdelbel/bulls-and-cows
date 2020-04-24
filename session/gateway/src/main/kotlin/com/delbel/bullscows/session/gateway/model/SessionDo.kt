@@ -19,10 +19,4 @@ internal data class SessionDo(
         guessed = guessed,
         points = points
     )
-
-    companion object {
-
-        fun createFrom(session: Session) =
-            SessionDo(session.guessed, session.points).apply { id = session.id.value }
-    }
 }

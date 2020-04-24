@@ -3,6 +3,7 @@ package com.delbel.bullscows.session.gateway
 import com.delbel.bullscows.game.domain.Game
 import com.delbel.bullscows.session.domain.SessionId
 import com.delbel.bullscows.session.domain.repository.SessionRepository
+import com.delbel.bullscows.session.domain.toDo
 import com.delbel.bullscows.session.gateway.database.SessionDao
 import com.delbel.bullscows.session.gateway.model.SessionDo
 import kotlinx.coroutines.flow.first
@@ -21,6 +22,6 @@ internal class LocalSessionRepository @Inject constructor(
 
     override suspend fun addGameWon(id: SessionId, game: Game) {
         val updatedSession = obtainBy(id = id).first() + game
-        sessionDao.update(session = SessionDo.createFrom(updatedSession))
+        sessionDao.update(session = updatedSession.toDo())
     }
 }

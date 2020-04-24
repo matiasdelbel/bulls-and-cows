@@ -6,6 +6,8 @@ import com.delbel.bullscows.game.domain.Shift
 import com.delbel.bullscows.game.domain.core.Answer
 import com.delbel.bullscows.game.domain.core.Guess
 import com.delbel.bullscows.game.domain.core.Secret
+import com.delbel.bullscows.game.domain.core.toDo
+import com.delbel.bullscows.game.domain.toDo
 import com.delbel.bullscows.game.gateway.LocalGameRepository
 import com.delbel.bullscows.game.gateway.MainCoroutineRule
 import com.delbel.bullscows.game.gateway.database.GameDao
@@ -33,8 +35,7 @@ class LocalGameRepositoryTest {
         val secret = Secret(first = 1, second = 2, third = 3, fourth = 4)
         val game = Game(secret = secret, maxAttempts = 7)
         val factory = mock<GameFactory> { on { create() } doReturn game }
-        val gameDo = GameDo.createFrom(game = game)
-        val gameDao = mock<GameDao> { onBlocking { insert(gameDo) } doReturn 3 }
+        val gameDao = mock<GameDao> { onBlocking { insert(game.toDo()) } doReturn 3 }
         val repository = LocalGameRepository(gameDao = gameDao, shiftDao = mock(), gameFactory = factory)
 
         val gameId = repository.create()
@@ -62,13 +63,12 @@ class LocalGameRepositoryTest {
         val guess = Guess(first = 1, second = 2, third = 3, fourth = 4)
         val answer = Answer(bulls = 2, cows = 1)
         val shift = Shift(attempt = 1, guess = guess, answer = answer, maxAttempts = 3)
-        val shiftDo = ShiftDo.createFrom(id = GameId(id = 12), shift = shift)
         val shiftDao = mock<ShiftDao>()
         val repository = LocalGameRepository(gameDao = mock(), shiftDao = shiftDao, gameFactory = mock())
 
         repository.addShift(gameId = GameId(12), shift = shift)
 
-        verify(shiftDao).insert(shiftDo)
+        verify(shiftDao).insert(shift.toDo(gameId = 12))
     }
 
     @Test

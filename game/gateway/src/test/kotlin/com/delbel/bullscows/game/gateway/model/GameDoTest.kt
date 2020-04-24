@@ -12,20 +12,6 @@ import org.junit.Test
 class GameDoTest {
 
     @Test
-    fun `createFrom should create a new instance of the DO`() {
-        val game = Game(
-            secret = Secret(first = 1, second = 2, third = 3, fourth = 4),
-            maxAttempts = 7
-        )
-
-        val gameDo = GameDo.createFrom(game)
-
-        assertThat(gameDo.id).isEqualTo(0)
-        assertThat(gameDo.secret).isEqualTo(SecretDo(first = 1, second = 2, third = 3, fourth = 4))
-        assertThat(gameDo.maxAttempts).isEqualTo(7)
-    }
-
-    @Test
     fun `asModel should create a new instance of the business object`() {
         val shift = mock<Shift>()
         val gameDo = GameDo(maxAttempts = 3, secret = SecretDo(first = 1, second = 2, third = 3, fourth = 4))

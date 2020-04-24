@@ -4,7 +4,6 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
-import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.game.domain.Shift
 import com.delbel.bullscows.game.domain.core.Answer
 import com.delbel.bullscows.game.domain.core.Guess
@@ -34,18 +33,6 @@ internal data class ShiftDo(
         answer = Answer(bulls = bulls, cows = cows),
         maxAttempts = maxAttempts
     )
-
-    companion object {
-
-        fun createFrom(id: GameId, shift: Shift) = ShiftDo(
-            gameId = id.id,
-            attempt = shift.attempt,
-            guess = with(shift.guess) { GuessDo(first, second, third, fourth) },
-            bulls = shift.answer.bulls,
-            cows = shift.answer.cows,
-            maxAttempts = shift.maxAttempts
-        )
-    }
 
     data class GuessDo(val first: Int, val second: Int, val third: Int, val fourth: Int)
 }
