@@ -9,7 +9,7 @@ plugins {
 
 android { viewBinding { isEnabled = true } }
 
-coverage { excludes("**/di/**", "**/*Screen*") }
+coverage { excludes("**/di/**", "**/*Screen*", "**/*Adapter*", "**/*Holder*", "**/*MarginItemDecoration*") }
 
 dependencies {
     implementation(project(path = ":session:domain"))
@@ -30,6 +30,7 @@ dependencies {
     implementation(deps.Presentation.savedState)
 
     implementation(deps.Presentation.constraintLayout)
+    implementation(deps.Presentation.recyclerView)
     implementation(deps.Presentation.material)
 
     implementation(deps.Presentation.assistedInjection)

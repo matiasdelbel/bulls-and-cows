@@ -46,6 +46,19 @@ class LocalSessionRepositoryTest {
         assertThat(session.first()).isEqualTo(expected)
     }
 
+    @Test
+    fun `obtainAll should return sessions from data base`() = mainRule.runBlockingTest {
+        val expected = mock<Session>()
+        val sessionDo = mock<SessionDo> { on { asModel() } doReturn expected }
+        val dao = mock<SessionDao> {
+            onBlocking { obtainAll() } doReturn flow { emit(listOf(sessionDo)) }
+        }
+        val repository = LocalSessionRepository(dao)
+
+        val session = repository.obtainAll()
+
+        assertThat(session.first()).containsExactly(expected)
+    }
 
     @Test
     fun `addGameWon should update points and guessed on data base`() = mainRule.runBlockingTest {

@@ -60,7 +60,8 @@ class MenuScreen : Fragment(R.layout.screen_menu) {
     }
 
     private fun setUpBestScoresAction() = viewBinding.bestScores.setOnClickListener {
-        TODO()
+        val deepLink = Uri.parse(getString(R.string.best_score_deep_link))
+        findNavController().navigate(deepLink)
     }
 
     private fun navigateToGameScreen(gameId: GameId) {

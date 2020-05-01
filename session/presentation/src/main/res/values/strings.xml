@@ -17,5 +17,10 @@
     <string name="continue_game">Continue</string>
     <string name="best_scores">Best Scores</string>
 
+    <string name="position">Position</string>
+    <string name="points">Points</string>
+    <string name="guesses">Guesses</string>
+
     <string name="game_deep_link" translatable="false">bulls-cows://game?gameId=%1$d</string>
+    <string name="best_score_deep_link" translatable="false">bulls-cows://session/best_scores</string>
 </resources>

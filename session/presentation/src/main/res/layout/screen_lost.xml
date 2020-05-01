@@ -63,10 +63,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/continue_game_lost"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/best_scores"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintVertical_bias="0.4"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/best_scores"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/best_scores"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/next"
+        app:layout_constraintRight_toRightOf="@id/next"
+        app:layout_constraintTop_toBottomOf="@id/next" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

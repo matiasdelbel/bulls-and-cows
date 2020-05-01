@@ -11,5 +11,7 @@ interface SessionRepository {
 
     fun obtainBy(id: SessionId): Flow<Session>
 
+    fun obtainAll(): Flow<List<Session>>
+
     suspend fun addGameWon(id: SessionId, game: Game)
 }

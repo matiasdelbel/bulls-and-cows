@@ -1,5 +1,6 @@
 package com.delbel.bullscows.session.presentation.di
 
+import com.delbel.bullscows.session.presentation.best.BestScoreScreen
 import com.delbel.bullscows.session.presentation.lost.LostScreen
 import com.delbel.bullscows.session.presentation.menu.MenuScreen
 import com.delbel.bullscows.session.presentation.won.WonScreen
@@ -17,4 +18,7 @@ internal interface ScreenModule {
 
     @ContributesAndroidInjector
     fun contributeLostScreen(): LostScreen
+
+    @ContributesAndroidInjector
+    fun contributeBestScoreScreen(): BestScoreScreen
 }
