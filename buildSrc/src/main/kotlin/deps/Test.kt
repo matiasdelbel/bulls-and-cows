@@ -3,7 +3,7 @@ package deps
 sealed class Test {
 
     val truth = "com.google.truth:truth:1.0"
-    val core = "android.arch.core:core-testing:1.1.1"
+    val core = "android.arch.core:core-testing:2.1.0"
 }
 
 object UnitTest : Test() {

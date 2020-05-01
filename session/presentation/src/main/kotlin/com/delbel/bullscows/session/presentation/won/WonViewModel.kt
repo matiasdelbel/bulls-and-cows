@@ -9,6 +9,8 @@ import com.delbel.bullscows.session.domain.repository.SessionRepository
 import com.delbel.bullscows.session.presentation.di.AssistedViewModelFactory
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 
 internal class WonViewModel @AssistedInject constructor(
     @Assisted handle: SavedStateHandle,
@@ -20,12 +22,15 @@ internal class WonViewModel @AssistedInject constructor(
     @AssistedInject.Factory
     interface Factory : AssistedViewModelFactory<WonViewModel>
 
-    private val sessionId = currentSessionRepository.obtainSessionId()
-    val session = sessionRepository.obtainBy(sessionId).asLiveData()
+    val session = currentSessionRepository.obtainSessionId()
+        .flatMapLatest { sessionId -> sessionRepository.obtainBy(sessionId!!) }
+        .asLiveData()
 
-    private val gameId = GameId(id = handle.get<String>("game_id")!!.toLong())
     val game = liveData {
+        val gameId = GameId(id = handle.get<String>("game_id")!!.toLong())
         val game = gameRepository.obtainGameBy(id = gameId)
+        val sessionId = currentSessionRepository.obtainSessionId().first()!!
+
         sessionRepository.addGameWon(sessionId, game)
 
         emit(game)

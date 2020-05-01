@@ -2,6 +2,7 @@ package com.delbel.bullscows.session.domain.repository
 
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.session.domain.SessionId
+import kotlinx.coroutines.flow.Flow
 
 interface CurrentSessionRepository {
 
@@ -9,13 +10,9 @@ interface CurrentSessionRepository {
 
     fun updateGameId(gameId: GameId)
 
-    fun obtainSessionId(): SessionId
+    fun obtainSessionId(): Flow<SessionId?>
 
-    fun obtainGameId(): GameId
+    fun obtainGameId(): Flow<GameId?>
 
     fun clear()
 }
-
-class NoSessionException : RuntimeException()
-
-class NoGameException : RuntimeException()
