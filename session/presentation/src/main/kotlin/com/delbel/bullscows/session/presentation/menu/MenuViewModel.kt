@@ -1,11 +1,14 @@
 package com.delbel.bullscows.session.presentation.menu
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.liveData
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.game.domain.repository.GameRepository
 import com.delbel.bullscows.session.domain.repository.CurrentSessionRepository
 import com.delbel.bullscows.session.domain.repository.SessionRepository
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 internal class MenuViewModel @Inject constructor(
@@ -14,38 +17,21 @@ internal class MenuViewModel @Inject constructor(
     private val gameRepository: GameRepository
 ) : ViewModel() {
 
-    private val _sessionState = MutableLiveData<SessionState>()
-    val sessionState: LiveData<SessionState> get() = _sessionState
-
-    init {
-        notifyCurrentSessionState()
-    }
-
-    private fun notifyCurrentSessionState() = viewModelScope.launch {
-        runCatching { currentSessionRepository.obtainSessionId() }
-            .onSuccess { _sessionState.value = RunningSession }
-            .onFailure { _sessionState.value = NoSession }
-    }
+    val sessionState = currentSessionRepository.obtainSessionId()
+        .map { session -> if (session == null) NoSession else RunningSession }
+        .asLiveData()
 
     fun create() = liveData {
         val gameId = gameRepository.create()
         val sessionId = sessionRepository.create()
-        currentSessionRepository.register(sessionId, gameId)
 
+        currentSessionRepository.register(sessionId, gameId)
         emit(value = NewSession(sessionId, gameId))
     }
 
     fun continueGame() = liveData {
-        runCatching { currentGameId() }
-            .onSuccess { emit(value = it) }
-            .onFailure { emit(value = createGameAndSaveItOnSession()) }
-    }
-
-    private suspend fun currentGameId(): GameId {
-        val gameId = currentSessionRepository.obtainGameId()
-        gameRepository.obtainGameBy(gameId).throwIfIsOver(exception = RuntimeException())
-
-        return gameId
+        val gameId = currentSessionRepository.obtainGameId().first() ?: createGameAndSaveItOnSession()
+        emit(value = gameId)
     }
 
     private suspend fun createGameAndSaveItOnSession(): GameId {

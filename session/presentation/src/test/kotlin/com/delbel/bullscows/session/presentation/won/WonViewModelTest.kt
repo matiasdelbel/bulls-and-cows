@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.delbel.bullscows.game.domain.Game
 import com.delbel.bullscows.game.domain.GameId
 import com.delbel.bullscows.game.domain.repository.GameRepository
+import com.delbel.bullscows.session.domain.Session
 import com.delbel.bullscows.session.domain.SessionId
 import com.delbel.bullscows.session.domain.repository.CurrentSessionRepository
 import com.delbel.bullscows.session.domain.repository.SessionRepository
@@ -13,8 +14,8 @@ import com.delbel.bullscows.session.presentation.MainCoroutineRule
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 
@@ -28,36 +29,42 @@ class WonViewModelTest {
     val coroutineRule = MainCoroutineRule()
 
     @Test
-    @Ignore
-    fun `game should obtain id and post it`() = coroutineRule.runBlockingTest {
+    fun `game and session should obtain them and post them`() = coroutineRule.runBlockingTest {
         val savedState = mock<SavedStateHandle> { on { get<String>("game_id") } doReturn "123" }
-        val sessionIdRepository = mock<CurrentSessionRepository> {
-            on { obtainSessionId() } doReturn SessionId(value = 45)
-        }
-        val sessionRepository = mock<SessionRepository>()
+        val session = mock<Session>()
+        val sessionId = mock<SessionId>()
         val game = mock<Game>()
+        val currentSessionRepository = mock<CurrentSessionRepository> {
+            on { obtainSessionId() } doReturn flow { emit(value = sessionId) }
+        }
+        val sessionRepository = mock<SessionRepository> {
+            on { obtainBy(sessionId) } doReturn flow { emit(value = session) }
+        }
         val gameRepository = mock<GameRepository> {
             onBlocking { obtainGameBy(id = GameId(id = 123)) } doReturn game
         }
-        val viewModel = WonViewModel(savedState, sessionIdRepository, sessionRepository, gameRepository)
-        val observer = mock<Observer<Game>>()
+        val viewModel = WonViewModel(savedState, currentSessionRepository, sessionRepository, gameRepository)
 
-        viewModel.game.observeForever(observer)
+        val sessionObserver = mock<Observer<Session>>()
+        val gameObserver = mock<Observer<Game>>()
+        viewModel.session.observeForever(sessionObserver)
+        viewModel.game.observeForever(gameObserver)
 
+        argumentCaptor<Session> {
+            verify(sessionObserver).onChanged(capture())
+            assertThat(firstValue).isEqualTo(session)
+        }
         argumentCaptor<Game> {
-            verify(observer).onChanged(capture())
+            verify(gameObserver).onChanged(capture())
             assertThat(firstValue).isEqualTo(game)
         }
-        verify(sessionRepository).addGameWon(id = SessionId(45), game = game)
+        verify(sessionRepository).addGameWon(id = sessionId, game = game)
     }
 
     @Test
-    @Ignore
     fun `createGame update game and notify id`() = coroutineRule.runBlockingTest {
         val savedState = mock<SavedStateHandle> { on { get<String>("game_id") } doReturn "123" }
-        val currentSessionRepository = mock<CurrentSessionRepository> {
-            on { obtainSessionId() } doReturn SessionId(value = 45)
-        }
+        val currentSessionRepository = mock<CurrentSessionRepository> ()
         val gameId = mock<GameId>()
         val gameRepository = mock<GameRepository> {
             onBlocking { obtainGameBy(id = GameId(id = 123)) } doReturn mock()

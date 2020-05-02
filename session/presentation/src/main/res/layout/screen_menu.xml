@@ -21,6 +21,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/continue_game"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/new_game"
         app:layout_constraintLeft_toLeftOf="@id/best_scores"
         app:layout_constraintRight_toRightOf="@id/best_scores"
