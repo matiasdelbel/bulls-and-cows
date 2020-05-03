@@ -24,13 +24,12 @@ internal class LostViewModel @AssistedInject constructor(
     interface Factory : AssistedViewModelFactory<LostViewModel>
 
     val session = currentSessionRepository.obtainSessionId()
-        .flatMapLatest { sessionId -> sessionRepository.obtainBy(sessionId!!) }
-        .asLiveData()
+        .flatMapLatest { sessionId -> sessionRepository.obtainBy(sessionId!!) } // TODO sigue tirando pero ahora al presionar el boton
+        .asLiveData() //TODO tampoco lo muestra en pantalla
 
     val game = liveData {
         val gameId = GameId(id = handle.get<String>("game_id")!!.toLong())
         val game = gameRepository.obtainGameBy(id = gameId)
-        currentSessionRepository.clear()
 
         emit(game)
     }
@@ -39,6 +38,7 @@ internal class LostViewModel @AssistedInject constructor(
         val sessionId = sessionRepository.create()
         val gameId = gameRepository.create()
 
+        currentSessionRepository.clear()
         currentSessionRepository.register(sessionId, gameId)
 
         emit(gameId)
